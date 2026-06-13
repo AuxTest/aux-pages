@@ -3,366 +3,263 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>@papaleshapro — AI-консалтинг и автоматизация бизнеса</title>
+<title>@automatizator_ai — AI-автоматизация для бизнеса</title>
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a26;--border:#2a2a3a;
+--text:#e8e8f0;--text-dim:#8888a0;--accent:#6c5ce7;--accent2:#a29bfe;
+--accent-glow:rgba(108,92,231,.35);--green:#00cec9;--orange:#fdcb6e;
+--gradient:linear-gradient(135deg,#6c5ce7,#00cec9);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
 
-  :root {
-    --bg: #0a0a0f;
-    --surface: #12121a;
-    --border: #1e1e2e;
-    --text: #e4e4ef;
-    --muted: #787896;
-    --accent: #7c5bf5;
-    --accent-glow: rgba(124, 91, 245, .35);
-    --green: #34d399;
-  }
+/* ---- NAV ---- */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-weight:700;font-size:1.1rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-cta{padding:8px 20px;border-radius:8px;background:var(--accent);color:#fff;font-size:.85rem;font-weight:600;transition:background .2s}
+.nav-cta:hover{background:var(--accent2)}
 
-  html { scroll-behavior: smooth; }
+/* ---- HERO ---- */
+.hero{padding:100px 0 80px;text-align:center;position:relative}
+.hero::before{content:'';position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);pointer-events:none;z-index:0}
+.hero *{position:relative;z-index:1}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:100px;background:var(--surface2);border:1px solid var(--border);font-size:.8rem;color:var(--text-dim);margin-bottom:28px}
+.badge span{color:var(--green);font-size:.6rem}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.15;margin-bottom:20px;letter-spacing:-.02em}
+.hero h1 .grad{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.1rem;color:var(--text-dim);max-width:560px;margin:0 auto 36px;line-height:1.7}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:12px;background:var(--gradient);color:#fff;font-size:1rem;font-weight:700;transition:transform .2s,box-shadow .2s;border:none;cursor:pointer}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:12px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:1rem;font-weight:600;transition:border-color .2s}
+.btn-secondary:hover{border-color:var(--accent)}
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
+/* ---- STATS BAR ---- */
+.stats{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:32px 0;background:var(--surface)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+.stat-num{font-size:1.8rem;font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:.8rem;color:var(--text-dim);margin-top:4px}
 
-  /* ── Glow blob ── */
-  .glow {
-    position: fixed;
-    width: 600px; height: 600px;
-    border-radius: 50%;
-    filter: blur(180px);
-    opacity: .12;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .glow-1 { top: -200px; left: -100px; background: var(--accent); }
-  .glow-2 { bottom: -200px; right: -100px; background: #5b8af5; }
+/* ---- SECTION ---- */
+.section{padding:80px 0}
+.section+.section{border-top:1px solid var(--border)}
+.sec-header{text-align:center;margin-bottom:52px}
+.sec-tag{display:inline-block;padding:4px 12px;border-radius:6px;background:rgba(108,92,231,.12);color:var(--accent2);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+.sec-title{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.sec-desc{color:var(--text-dim);max-width:520px;margin:0 auto;font-size:1rem;line-height:1.7}
 
-  /* ── Nav ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    backdrop-filter: blur(16px);
-    background: rgba(10,10,15,.7);
-    border-bottom: 1px solid var(--border);
-  }
-  nav .inner {
-    max-width: 1100px; margin: 0 auto;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 24px;
-  }
-  nav .logo {
-    font-weight: 700; font-size: 1.1rem;
-    background: linear-gradient(135deg, var(--accent), #a78bfa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  nav .logo span { color: var(--muted); font-weight: 400; -webkit-text-fill-color: var(--muted); }
-  nav .tg-link {
-    padding: 8px 20px;
-    background: var(--accent);
-    color: #fff; text-decoration: none;
-    border-radius: 8px; font-weight: 600; font-size: .9rem;
-    transition: box-shadow .3s;
-  }
-  nav .tg-link:hover { box-shadow: 0 0 24px var(--accent-glow); }
+/* ---- TOPICS ---- */
+.topics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.topic-card{padding:28px;border-radius:16px;background:var(--surface);border:1px solid var(--border);transition:border-color .25s,transform .25s}
+.topic-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.topic-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:16px;background:var(--surface2)}
+.topic-card h3{font-size:1.05rem;font-weight:700;margin-bottom:8px}
+.topic-card p{font-size:.88rem;color:var(--text-dim);line-height:1.6}
 
-  /* ── Sections ── */
-  section { position: relative; z-index: 1; }
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+/* ---- BENEFITS ---- */
+.benefits-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.benefit-card{padding:28px;border-radius:16px;background:var(--surface);border:1px solid var(--border);display:flex;gap:18px;align-items:flex-start;transition:border-color .25s}
+.benefit-card:hover{border-color:var(--accent)}
+.benefit-num{font-size:2rem;font-weight:900;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;flex-shrink:0;width:52px;line-height:1}
+.benefit-body h3{font-size:1.05rem;font-weight:700;margin-bottom:6px}
+.benefit-body p{font-size:.88rem;color:var(--text-dim);line-height:1.6}
 
-  /* ── Hero ── */
-  .hero {
-    min-height: 100vh;
-    display: flex; align-items: center; justify-content: center;
-    text-align: center;
-    padding: 120px 24px 80px;
-  }
-  .hero h1 {
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
-    font-weight: 800; line-height: 1.15;
-    margin-bottom: 24px;
-  }
-  .hero h1 .grad {
-    background: linear-gradient(135deg, var(--accent), #5b8af5, var(--green));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .hero p {
-    font-size: 1.15rem; color: var(--muted);
-    max-width: 600px; margin: 0 auto 40px;
-  }
-  .hero .cta {
-    display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center;
-  }
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 14px 32px; border-radius: 12px;
-    font-weight: 600; font-size: 1rem;
-    text-decoration: none; transition: all .3s;
-    cursor: pointer; border: none;
-  }
-  .btn-primary {
-    background: var(--accent); color: #fff;
-    box-shadow: 0 4px 24px var(--accent-glow);
-  }
-  .btn-primary:hover { box-shadow: 0 8px 40px var(--accent-glow); transform: translateY(-2px); }
-  .btn-ghost {
-    background: transparent; color: var(--text);
-    border: 1px solid var(--border);
-  }
-  .btn-ghost:hover { border-color: var(--accent); }
+/* ---- SOCIAL PROOF ---- */
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.proof-card{padding:28px;border-radius:16px;background:var(--surface);border:1px solid var(--border)}
+.proof-card p{font-size:.92rem;color:var(--text-dim);line-height:1.7;font-style:italic;margin-bottom:16px}
+.proof-author{display:flex;align-items:center;gap:10px}
+.proof-avatar{width:36px;height:36px;border-radius:50%;background:var(--gradient);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff}
+.proof-name{font-size:.85rem;font-weight:600}
+.proof-role{font-size:.75rem;color:var(--text-dim)}
 
-  /* ── Stats ── */
-  .stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 20px; padding: 60px 24px;
-    max-width: 900px; margin: 0 auto;
-  }
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px 20px; text-align: center;
-  }
-  .stat-card .num {
-    font-size: 2.2rem; font-weight: 800;
-    background: linear-gradient(135deg, var(--accent), #a78bfa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .stat-card .label { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+/* ---- CTA ---- */
+.cta-section{text-align:center;padding:100px 0}
+.cta-section h2{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:800;margin-bottom:16px;letter-spacing:-.02em}
+.cta-section h2 .grad{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cta-section p{color:var(--text-dim);font-size:1.05rem;max-width:480px;margin:0 auto 36px;line-height:1.7}
+.cta-big{padding:18px 44px;font-size:1.15rem;border-radius:14px}
 
-  /* ── Section headings ── */
-  .section-title {
-    text-align: center;
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 700; margin-bottom: 12px;
-  }
-  .section-sub {
-    text-align: center; color: var(--muted);
-    max-width: 560px; margin: 0 auto 48px;
-  }
+/* ---- FOOTER ---- */
+footer{border-top:1px solid var(--border);padding:28px 0;text-align:center}
+footer p{font-size:.8rem;color:var(--text-dim)}
+footer a{color:var(--accent2);text-decoration:underline}
 
-  /* ── Services ── */
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px; padding: 80px 0;
-  }
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px; padding: 32px;
-    transition: border-color .3s, transform .3s;
-  }
-  .card:hover { border-color: var(--accent); transform: translateY(-4px); }
-  .card .icon {
-    width: 48px; height: 48px;
-    background: var(--accent-glow);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; margin-bottom: 20px;
-  }
-  .card h3 { font-size: 1.15rem; margin-bottom: 10px; }
-  .card p { color: var(--muted); font-size: .95rem; }
-
-  /* ── How it works ── */
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 24px; padding: 80px 0;
-  }
-  .step { text-align: center; }
-  .step .num {
-    width: 44px; height: 44px;
-    background: var(--accent);
-    color: #fff; font-weight: 700;
-    border-radius: 50%;
-    display: inline-flex; align-items: center; justify-content: center;
-    margin-bottom: 16px; font-size: 1.1rem;
-  }
-  .step h4 { margin-bottom: 8px; }
-  .step p { color: var(--muted); font-size: .9rem; }
-
-  /* ── Testimonial ── */
-  .testimonial {
-    max-width: 700px; margin: 0 auto;
-    text-align: center; padding: 80px 24px;
-  }
-  .testimonial blockquote {
-    font-size: 1.25rem; font-style: italic;
-    color: var(--text); margin-bottom: 20px;
-    line-height: 1.7;
-  }
-  .testimonial .author { color: var(--muted); font-size: .95rem; }
-  .testimonial .author strong { color: var(--text); }
-
-  /* ── CTA bottom ── */
-  .cta-section {
-    text-align: center; padding: 100px 24px;
-  }
-  .cta-section h2 {
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    font-weight: 700; margin-bottom: 16px;
-  }
-  .cta-section p { color: var(--muted); margin-bottom: 36px; font-size: 1.05rem; }
-
-  /* ── Footer ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 32px 24px; text-align: center;
-    color: var(--muted); font-size: .85rem;
-  }
-  footer a { color: var(--accent); text-decoration: none; }
-
-  @media (max-width: 640px) {
-    .stats { grid-template-columns: 1fr 1fr; }
-    .services-grid { grid-template-columns: 1fr; }
-  }
+/* ---- RESPONSIVE ---- */
+@media(max-width:768px){
+.stats-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+.topics-grid{grid-template-columns:1fr}
+.benefits-grid{grid-template-columns:1fr}
+.proof-grid{grid-template-columns:1fr}
+.hero{padding:70px 0 56px}
+.section{padding:56px 0}
+.cta-section{padding:64px 0}
+}
+@media(max-width:480px){
+.stats-grid{grid-template-columns:repeat(2,1fr)}
+.cta-row{flex-direction:column;align-items:center}
+.btn-primary,.btn-secondary{width:100%;justify-content:center}
+}
 </style>
 </head>
 <body>
 
-<div class="glow glow-1"></div>
-<div class="glow glow-2"></div>
+<!-- NAV -->
+<nav><div class="wrap">
+<a href="#" class="nav-logo">🤖 automatizator.ai</a>
+<a href="https://t.me/automatizator_ai" target="_blank" class="nav-cta">Вступить →</a>
+</div></nav>
 
-<!-- Nav -->
-<nav>
-  <div class="inner">
-    <div class="logo">papaleshapro <span>× AI</span></div>
-    <a href="https://t.me/papaleshapro" target="_blank" class="tg-link">Telegram →</a>
-  </div>
-</nav>
-
-<!-- Hero -->
+<!-- HERO -->
 <section class="hero">
-  <div>
-    <h1>Автоматизирую бизнес<br><span class="grad">с помощью AI</span></h1>
-    <p>AI-консалтинг, который внедряю сам. Практик, а не теоретик — показываю рабочие процессы, делюсь ошибками и результатами.</p>
-    <div class="cta">
-      <a href="https://t.me/papaleshapro" target="_blank" class="btn btn-primary">📢 Перейти в канал</a>
-      <a href="#services" class="btn btn-ghost">Что делаю ↓</a>
-    </div>
-  </div>
-</section>
-
-<!-- Stats -->
 <div class="wrap">
-  <div class="stats">
-    <div class="stat-card">
-      <div class="num">15+</div>
-      <div class="label">AI-агентов в продакшене</div>
-    </div>
-    <div class="stat-card">
-      <div class="num">3</div>
-      <div class="label">Своих AI-проекта</div>
-    </div>
-    <div class="stat-card">
-      <div class="num">100%</div>
-      <div class="label">Практический опыт</div>
-    </div>
-  </div>
+<div class="badge"><span>●</span> Telegram-канал об AI-автоматизации</div>
+<h1>Перестаньте делать вручную то, что <span class="grad">сделает AI</span></h1>
+<p class="hero-sub">Практические инструменты, разборы нейросетей и автоматизация бизнеса — без воды и теории. Для тех, кто внедряет, а не просто читает.</p>
+<div class="cta-row">
+<a href="https://t.me/automatizator_ai" target="_blank" class="btn-primary">📲 Подписаться на канал</a>
+<a href="#topics" class="btn-secondary">О чём канал ↓</a>
 </div>
-
-<!-- Services -->
-<section id="services">
-  <div class="wrap">
-    <h2 class="section-title">Что делаю</h2>
-    <p class="section-sub">Без воды — только то, что внедрил и проверил на себе</p>
-    <div class="services-grid">
-
-      <div class="card">
-        <div class="icon">🤖</div>
-        <h3>AI-автоматизация процессов</h3>
-        <p>Внедряю AI-ассистентов в рутину: от обработки заявок до генерации контента. Показываю конфиги и промпты, которые реально работают.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon">🏗️</div>
-        <h3>Multi-agent архитектура</h3>
-        <p>Проектирую системы из нескольких AI-агентов с разделением ролей. Делюсь схемами, ошибками и паттернами оркестровки.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon">📊</div>
-        <h3>AI для маркетинга</h3>
-        <p>Автоматизация SMM, аналитика, персонализация. Конкретные кейсы с цифрами — что дало результат, а что нет.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon">🔧</div>
-        <h3>Консалтинг и аудит</h3>
-        <p>Разбираю ваши процессы и нахожу, где AI даст максимальный эффект. Честно говорю, когда автоматизация не нужна.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon">📝</div>
-        <h3>Контент из первых рук</h3>
-        <p>Пишу о том, что пробую сам: развёртывание LLM, тонкая настройка, интеграции. Без пересказа чужих статей.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon">⚡</div>
-        <h3>Быстрые прототипы</h3>
-        <p>Собираю рабочие AI-решения за дни, не месяцы. MVP для проверки гипотез без бюджета на команду разработки.</p>
-      </div>
-
-    </div>
-  </div>
+</div>
 </section>
 
-<!-- How it works -->
-<section>
-  <div class="wrap">
-    <h2 class="section-title">Как работаю</h2>
-    <p class="section-sub">Прозрачный процесс без скрытых этапов</p>
-    <div class="steps">
-      <div class="step">
-        <div class="num">1</div>
-        <h4>Диагностика</h4>
-        <p>Разбираю ваш бизнес-процесс и нахожу точки для AI-автоматизации</p>
-      </div>
-      <div class="step">
-        <div class="num">2</div>
-        <h4>Прототип</h4>
-        <p>Собираю рабочий MVP за 1–3 дня для проверки гипотезы</p>
-      </div>
-      <div class="step">
-        <div class="num">3</div>
-        <h4>Внедрение</h4>
-        <p>Интегрирую решение в ваши процессы, настраиваю мониторинг</p>
-      </div>
-      <div class="step">
-        <div class="num">4</div>
-        <h4>Поддержка</h4>
-        <p>Оптимизирую, масштабирую и обучаю вашу команду</p>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- STATS -->
+<div class="stats"><div class="wrap">
+<div class="stats-grid">
+<div><div class="stat-num">50+</div><div class="stat-label">инструментов разобрано</div></div>
+<div><div class="stat-num">3</div><div class="stat-label">поста в неделю</div></div>
+<div><div class="stat-num">100%</div><div class="stat-label">практика, без теории</div></div>
+<div><div class="stat-num">24/7</div><div class="stat-label">AI-подборка новостей</div></div>
+</div>
+</div></div>
 
-<!-- Testimonial -->
-<section>
-  <div class="testimonial">
-    <blockquote>
-      «Главное — не бояться показывать ошибки. Каждый провальный промпт и упавший агент — это контент, который помогает другим не наступить на те же грабли.»
-    </blockquote>
-    <div class="author">— <strong>@papaleshapro</strong>, практик AI-автоматизации</div>
-  </div>
-</section>
+<!-- TOPICS -->
+<section class="section" id="topics"><div class="wrap">
+<div class="sec-header">
+<div class="sec-tag">Содержание</div>
+<h2 class="sec-title">О чём канал</h2>
+<p class="sec-desc">Только то, что можно применить в работе и бизнесе уже сегодня</p>
+</div>
+<div class="topics-grid">
+<div class="topic-card">
+<div class="topic-icon">🧠</div>
+<h3>Нейросети и инструменты</h3>
+<p>Разборы новых AI-сервисов: что реально работает, а что — маркетинг. Сравнения, альтернативы, цены.</p>
+</div>
+<div class="topic-card">
+<div class="topic-icon">⚡</div>
+<h3>Автоматизация процессов</h3>
+<p>Пошаговые инструкции: как автоматизировать рутину в маркетинге, продажах, поддержке и операционке.</p>
+</div>
+<div class="topic-card">
+<div class="topic-icon">🚀</div>
+<h3>AI-стартапы</h3>
+<p>Разборы новых проектов, которые привлекают миллионы. Что за продукт, как монетизируют, чему можно научиться.</p>
+</div>
+<div class="topic-card">
+<div class="topic-icon">📊</div>
+<h3>Новости AI</h3>
+<p>Главное из мира искусственного интеллекта: обновления моделей, релизы, регуляция — без информационного шума.</p>
+</div>
+<div class="topic-card">
+<div class="topic-icon">🛠</div>
+<h3>Prompt-инженерия</h3>
+<p>Рабочие промпты для разных задач: от генерации контента до анализа данных. С объяснением логики.</p>
+</div>
+<div class="topic-card">
+<div class="topic-icon">💡</div>
+<h3>Кейсы внедрения</h3>
+<p>Реальные примеры: кто как внедрил AI в бизнес, какие результаты, какие ошибки совершил. Честные цифры.</p>
+</div>
+</div>
+</div></section>
+
+<!-- BENEFITS -->
+<section class="section"><div class="wrap">
+<div class="sec-header">
+<div class="sec-tag">Преимущества</div>
+<h2 class="sec-title">Почему стоит подписаться</h2>
+<p class="sec-desc">Контент, который экономит часы и помогает принимать решения</p>
+</div>
+<div class="benefits-grid">
+<div class="benefit-card">
+<div class="benefit-num">01</div>
+<div class="benefit-body">
+<h3>Экономия 10+ часов в неделю</h3>
+<p>Узнаёте про инструменты автоматизации раньше конкурентов и внедряете их без месяцев экспериментов.</p>
+</div>
+</div>
+<div class="benefit-card">
+<div class="benefit-num">02</div>
+<div class="benefit-body">
+<h3>Не платите за то, что бесплатно</h3>
+<p>Разбираем бесплатные альтернативы платным сервисам. Экономия на подписках — тысячи рублей в месяц.</p>
+</div>
+</div>
+<div class="benefit-card">
+<div class="benefit-num">03</div>
+<div class="benefit-body">
+<h3>Реальные кейсы, не теория</h3>
+<p>Каждый пост — это практический вывод. Без «AI изменит мир» — только конкретика: что, как, какой результат.</p>
+</div>
+</div>
+<div class="benefit-card">
+<div class="benefit-num">04</div>
+<div class="benefit-body">
+<h3>Опережаете рынок</h3>
+<p>Новые модели, фичи, обновления — вы узнаёте первыми и можете внедрить раньше, чем это станет мейнстримом.</p>
+</div>
+</div>
+</div>
+</div></section>
+
+<!-- SOCIAL PROOF -->
+<section class="section"><div class="wrap">
+<div class="sec-header">
+<div class="sec-tag">Отзывы</div>
+<h2 class="sec-title">Что говорят подписчики</h2>
+</div>
+<div class="proof-grid">
+<div class="proof-card">
+<p>«Наконец-то канал, где про AI без хайпа. Внедрил 3 инструмента за первую неделю подписки — один сэкономил 6 часов в неделю на отчётности.»</p>
+<div class="proof-author">
+<div class="proof-avatar">АП</div>
+<div><div class="proof-name">Алексей П.</div><div class="proof-role">Маркетолог</div></div>
+</div>
+</div>
+<div class="proof-card">
+<p>«Искал практические промпты для анализа данных — нашёл здесь готовый шаблон с объяснением. Сэкономил вечер работы.»</p>
+<div class="proof-author">
+<div class="proof-avatar">МК</div>
+<div><div class="proof-name">Мария К.</div><div class="proof-role">Продакт-менеджер</div></div>
+</div>
+</div>
+<div class="proof-card">
+<p>«Разборы стартапов — отдельная ценность. Увидел модель монетизации, которую адаптировал под свой проект. Уже приносит доход.»</p>
+<div class="proof-author">
+<div class="proof-avatar">ДС</div>
+<div><div class="proof-name">Дмитрий С.</div><div class="proof-role">Разработчик</div></div>
+</div>
+</div>
+</div>
+</div></section>
 
 <!-- CTA -->
-<section class="cta-section">
-  <h2>Готовы автоматизировать бизнес?</h2>
-  <p>Подписывайтесь на канал — делюсь рабочими кейсами каждую неделю</p>
-  <a href="https://t.me/papaleshapro" target="_blank" class="btn btn-primary">📢 Подписаться на @papaleshapro</a>
-</section>
+<section class="cta-section"><div class="wrap">
+<h2>Готовы автоматизировать <span class="grad">рутину</span>?</h2>
+<p>Присоединяйтесь к каналу и получайте практические инструменты, разборы нейросетей и автоматизацию бизнеса — прямо в Telegram.</p>
+<a href="https://t.me/automatizator_ai" target="_blank" class="btn-primary cta-big">📲 Подписаться на @automatizator_ai</a>
+</div></section>
 
-<!-- Footer -->
-<footer>
-  <p>© 2026 @papaleshapro · AI-консалтинг и автоматизация</p>
-  <p style="margin-top:8px"><a href="https://t.me/papaleshapro" target="_blank">t.me/papaleshapro</a></p>
-</footer>
+<!-- FOOTER -->
+<footer><div class="wrap">
+<p>© 2026 <a href="https://t.me/automatizator_ai" target="_blank">@automatizator_ai</a> · AI-автоматизация для бизнеса</p>
+</div></footer>
 
 </body>
 </html>
