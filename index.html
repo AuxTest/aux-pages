@@ -3,425 +3,1167 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>@papaleshapro — AI-консалтинг и автоматизация бизнеса</title>
-<meta name="description" content="AI-консалтинг: внедряем AI-ассистентов в бизнес-процессы. Автоматизация рутины, которую можно делегировать машинам.">
+<title>Prop Trading Lab — Проп-трейдинг, Челленджи, Funded Accounts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg-primary: #0B0F1A;
-  --bg-card: #131926;
-  --text-primary: #F0F2F5;
-  --text-muted: #8B92A8;
-  --accent: #6C63FF;
-  --accent-light: #8B83FF;
-  --accent-glow: rgba(108,99,255,0.15);
-  --border: rgba(255,255,255,0.06);
-  --green: #4ADE80;
-  --tg: #2AABEE;
+  --bg: #0a0a0f;
+  --bg-card: #111118;
+  --bg-card-hover: #16161f;
+  --bg-elevated: #1a1a24;
+  --border: #2a2a38;
+  --border-light: #3a3a4a;
+  --text: #e8e8f0;
+  --text-muted: #8888a0;
+  --text-dim: #55556a;
+  --accent: #6c5ce7;
+  --accent-light: #a29bfe;
+  --accent-glow: rgba(108, 92, 231, 0.3);
+  --green: #00d68f;
+  --green-dim: rgba(0, 214, 143, 0.15);
+  --red: #ff6b6b;
+  --red-dim: rgba(255, 107, 107, 0.1);
+  --orange: #ffa502;
+  --yellow: #ffd32a;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 48px rgba(0,0,0,0.5);
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
 html { scroll-behavior: smooth; }
+
 body {
-  font-family: 'Inter', -apple-system, sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
-/* === NAV === */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(11,15,26,0.8);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 2rem;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 68px;
+/* ── Utility ── */
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
-.nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); text-decoration: none; }
-.nav-logo span { color: var(--accent); }
-.nav-links { display: flex; gap: 2rem; list-style: none; }
-.nav-links a {
-  color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
-  transition: color 0.2s;
-}
-.nav-links a:hover { color: var(--text-primary); }
-.nav-cta {
-  background: var(--accent); color: #fff !important;
-  padding: 0.55rem 1.3rem; border-radius: 8px;
-  font-weight: 600; font-size: 0.85rem;
-  text-decoration: none; transition: background 0.2s;
-}
-.nav-cta:hover { background: var(--accent-light); }
 
-/* === HERO === */
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ── Noise texture overlay ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* ── Nav ── */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 16px 0;
+  transition: var(--transition);
+}
+.nav.scrolled {
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+.nav-logo .logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent), #0984e3);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: var(--radius-xs);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+.nav-cta:hover {
+  background: var(--accent-light);
+  transform: translateY(-1px);
+}
+
+/* ── Hero ── */
 .hero {
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  text-align: center;
-  padding: 6rem 2rem 4rem;
+  padding: 160px 0 120px;
   position: relative;
+  overflow: hidden;
 }
 .hero::before {
-  content: ''; position: absolute;
-  width: 600px; height: 600px;
+  content: '';
+  position: absolute;
+  top: -300px;
+  right: -200px;
+  width: 800px;
+  height: 800px;
   background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-  top: 10%; left: 50%; transform: translateX(-50%);
+  opacity: 0.5;
   pointer-events: none;
 }
-.hero-content { max-width: 720px; z-index: 1; }
-.hero-badge {
-  display: inline-block;
-  background: var(--accent-glow); color: var(--accent-light);
-  border: 1px solid rgba(108,99,255,0.3);
-  padding: 0.35rem 1rem; border-radius: 50px;
-  font-size: 0.8rem; font-weight: 600; margin-bottom: 1.5rem;
-}
-.hero h1 {
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
-  font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem;
-}
-.hero h1 .accent { color: var(--accent); }
-.hero p {
-  font-size: 1.15rem; color: var(--text-muted);
-  max-width: 560px; margin: 0 auto 2.5rem;
-}
-.hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-.btn {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.85rem 2rem; border-radius: 10px;
-  font-weight: 600; font-size: 0.95rem;
-  text-decoration: none; transition: all 0.2s; cursor: pointer; border: none;
-}
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: var(--accent-light); transform: translateY(-1px); }
-.btn-secondary {
-  background: transparent; color: var(--text-primary);
-  border: 1px solid var(--border);
-}
-.btn-secondary:hover { border-color: var(--accent); }
-
-/* === STATS === */
-.stats {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.5rem; max-width: 900px; margin: 0 auto 6rem;
-  padding: 0 2rem;
-}
-.stat-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 1.8rem; text-align: center;
-}
-.stat-num { font-size: 2.2rem; font-weight: 800; color: var(--accent); }
-.stat-label { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem; }
-
-/* === SECTIONS === */
-.section {
-  max-width: 960px; margin: 0 auto 6rem; padding: 0 2rem;
-}
-.section-label {
-  text-transform: uppercase; font-size: 0.75rem; font-weight: 700;
-  color: var(--accent); letter-spacing: 0.1em; margin-bottom: 0.8rem;
-}
-.section-title {
-  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-  font-weight: 800; margin-bottom: 1.2rem;
-}
-.section-desc {
-  color: var(--text-muted); font-size: 1.05rem; max-width: 600px;
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -200px;
+  left: -100px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(9, 132, 227, 0.15) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-/* === SERVICES === */
-.services-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem; margin-top: 2.5rem;
-}
-.service-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 16px; padding: 2rem;
-  transition: border-color 0.2s, transform 0.2s;
-}
-.service-card:hover {
-  border-color: var(--accent); transform: translateY(-2px);
-}
-.service-icon {
-  width: 44px; height: 44px; background: var(--accent-glow);
-  border-radius: 10px; display: flex; align-items: center; justify-content: center;
-  font-size: 1.4rem; margin-bottom: 1.2rem;
-}
-.service-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.6rem; }
-.service-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.55; }
-
-/* === PROCESS === */
-.process-steps {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem; margin-top: 2.5rem;
-}
-.step {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 1.8rem 1.4rem; text-align: center;
-}
-.step-num {
-  width: 36px; height: 36px; background: var(--accent);
-  border-radius: 50%; display: inline-flex;
-  align-items: center; justify-content: center;
-  font-weight: 800; font-size: 0.9rem; margin-bottom: 1rem;
-}
-.step h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
-.step p { color: var(--text-muted); font-size: 0.85rem; }
-
-/* === TESTIMONIAL === */
-.testimonial {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 16px; padding: 2.5rem; margin-top: 2.5rem;
-  text-align: center; max-width: 700px; margin-left: auto; margin-right: auto;
-}
-.testimonial blockquote {
-  font-size: 1.15rem; font-style: italic; color: var(--text-primary);
-  line-height: 1.7; margin-bottom: 1.5rem;
-}
-.testimonial blockquote::before { content: '«'; color: var(--accent); font-size: 1.4em; }
-.testimonial blockquote::after { content: '»'; color: var(--accent); font-size: 1.4em; }
-.testimonial-author { color: var(--text-muted); font-size: 0.9rem; }
-
-/* === FAQ === */
-.faq-list { margin-top: 2rem; }
-.faq-item {
-  border: 1px solid var(--border); border-radius: 12px;
-  margin-bottom: 0.8rem; overflow: hidden;
-}
-.faq-q {
-  width: 100%; padding: 1.2rem 1.5rem; text-align: left;
-  background: var(--bg-card); border: none; color: var(--text-primary);
-  font: inherit; font-weight: 600; font-size: 0.95rem;
-  cursor: pointer; display: flex; justify-content: space-between;
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
   align-items: center;
 }
-.faq-q::after { content: '+'; font-size: 1.2rem; color: var(--accent); }
-.faq-q.active::after { content: '−'; }
-.faq-a {
-  display: none; padding: 0 1.5rem 1.2rem;
-  color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;
-}
-.faq-a.open { display: block; }
 
-/* === CTA === */
-.cta {
-  max-width: 960px; margin: 0 auto 4rem; padding: 0 2rem;
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(108, 92, 231, 0.3);
+  color: var(--accent-light);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 28px;
+  backdrop-filter: blur(8px);
 }
-.cta-box {
-  background: linear-gradient(135deg, var(--accent) 0%, #4F46E5 100%);
-  border-radius: 20px; padding: 3.5rem 2rem; text-align: center;
+.hero-badge .pulse {
+  width: 8px;
+  height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
 }
-.cta-box h2 {
-  font-size: clamp(1.5rem, 3vw, 2.2rem);
-  font-weight: 800; margin-bottom: 1rem;
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
 }
-.cta-box p { opacity: 0.9; font-size: 1.05rem; margin-bottom: 2rem; max-width: 480px; margin-left: auto; margin-right: auto; }
-.cta-box .btn-telegram {
-  background: var(--tg); color: #fff;
-  padding: 0.9rem 2.2rem; border-radius: 10px;
-  font-weight: 700; font-size: 1.05rem;
-  text-decoration: none; display: inline-flex;
-  align-items: center; gap: 0.6rem;
-  transition: opacity 0.2s;
-}
-.cta-box .btn-telegram:hover { opacity: 0.9; }
 
-/* === FOOTER === */
-footer {
-  border-top: 1px solid var(--border); padding: 2rem;
-  text-align: center; color: var(--text-muted); font-size: 0.85rem;
+.hero h1 {
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
 }
-footer a { color: var(--text-muted); text-decoration: none; }
-footer a:hover { text-decoration: underline; }
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--accent-light), #0984e3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
+.hero-desc {
+  font-size: 18px;
+  color: var(--text-muted);
+  margin-bottom: 36px;
+  max-width: 480px;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--accent), #0984e3);
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  transition: var(--transition);
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px var(--accent-glow);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-light);
+  color: var(--text);
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+.btn-secondary:hover {
+  border-color: var(--accent);
+  background: var(--bg-card-hover);
+}
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+}
+.stat-num {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+}
+.stat-num .accent { color: var(--green); }
+.stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── Hero Visual (Live Ticker) ── */
+.hero-visual {
+  position: relative;
+}
+.ticker-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ticker-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), #0984e3, var(--green));
+}
+
+.ticker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.ticker-title {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.ticker-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 600;
+}
+
+.ticker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.ticker-row:last-child { border-bottom: none; }
+.trade-pair {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 15px;
+}
+.pair-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.pair-icon.bull { background: var(--green-dim); }
+.pair-icon.bear { background: var(--red-dim); }
+.trade-info { text-align: right; }
+.trade-pnl { font-weight: 700; font-size: 15px; }
+.trade-pnl.positive { color: var(--green); }
+.trade-pnl.negative { color: var(--red); }
+.trade-size { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* ── Sections ── */
+.section { padding: 120px 0; position: relative; position: relative; z-index: 1; }
+.section-header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 64px;
+}
+.section-tag {
+  display: inline-block;
+  background: var(--accent-dim);
+  border: 1px solid rgba(108, 92, 231, 0.2);
+  color: var(--accent-light);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+.section-desc {
+  font-size: 17px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ── What is Prop ── */
+.prop-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.prop-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  transition: var(--transition);
+}
+.prop-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  background: var(--bg-card-hover);
+}
+.prop-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.prop-icon.purple { background: rgba(108, 92, 231, 0.15); }
+.prop-icon.blue { background: rgba(9, 132, 227, 0.15); }
+.prop-icon.green { background: var(--green-dim); }
+.prop-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.prop-card p {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ── Challenge Tiers ── */
+.challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.challenge-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.challenge-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.challenge-card.featured {
+  border-color: var(--accent);
+}
+.challenge-card.featured::before {
+  content: 'Популярный';
+  position: absolute;
+  top: 20px;
+  right: -32px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 40px;
+  transform: rotate(45deg);
+}
+.challenge-inner { padding: 36px; }
+.challenge-tier {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+.challenge-tier.t1 { color: var(--green); }
+.challenge-tier.t2 { color: var(--orange); }
+.challenge-tier.t3 { color: var(--accent-light); }
+.challenge-capital {
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
+}
+.challenge-capital span {
+  font-size: 20px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.challenge-target {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+.challenge-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+.challenge-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+.challenge-features li::before {
+  content: '✓';
+  color: var(--green);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.challenge-cta {
+  display: block;
+  text-align: center;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-light);
+  color: var(--text);
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+.challenge-cta:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.challenge-card.featured .challenge-cta {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.challenge-card.featured .challenge-cta:hover {
+  background: var(--accent-light);
+}
+
+/* ── Process Steps ── */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  position: relative;
+}
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 48px;
+  left: 12.5%;
+  right: 12.5%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), #0984e3, var(--green));
+  opacity: 0.3;
+}
+.step {
+  text-align: center;
+  padding: 0 20px;
+  position: relative;
+}
+.step-num {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent-light);
+  margin: 0 auto 24px;
+  position: relative;
+  z-index: 1;
+}
+.step h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.step p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ── Results / Proof ── */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+.result-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+}
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.result-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #0984e3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+.result-name {
+  font-weight: 700;
+  font-size: 16px;
+}
+.result-acc {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.result-stats {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 20px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.result-stat-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
+  font-weight: 700;
+}
+.result-stat-val.green { color: var(--green); }
+.result-stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.result-quote {
+  font-size: 15px;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.8;
+}
+.result-quote::before { content: '«'; }
+.result-quote::after { content: '»'; }
+
+/* ── Telegram CTA ── */
+.telegram-cta {
+  padding: 80px 0;
+}
+.tg-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 64px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.tg-card::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+.tg-card > * { position: relative; z-index: 1; }
+.tg-icon {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #0088cc, #0099e6);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin: 0 auto 28px;
+}
+.tg-title {
+  font-size: clamp(24px, 3.5vw, 36px);
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.tg-desc {
+  font-size: 17px;
+  color: var(--text-muted);
+  max-width: 520px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+}
+.tg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #0088cc, #0099e6);
+  color: #fff;
+  padding: 16px 36px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+  transition: var(--transition);
+}
+.tg-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 136, 204, 0.4);
+}
+
+/* ── Footer ── */
+.footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.footer a:hover { color: var(--text); }
+
+/* ── Animations ── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate { animation: fade-up 0.8s ease forwards; opacity: 0; }
+.d-1 { animation-delay: 0.1s; }
+.d-2 { animation-delay: 0.2s; }
+.d-3 { animation-delay: 0.3s; }
+.d-4 { animation-delay: 0.4s; }
+.d-5 { animation-delay: 0.5s; }
+.d-6 { animation-delay: 0.6s; }
+.d-7 { animation-delay: 0.7s; }
+.d-8 { animation-delay: 0.8s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate { animation: none; opacity: 1; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .prop-grid,
+  .challenges-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 0;
+  }
+  .steps::before { display: none; }
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-stats { gap: 32px; }
+  .hero { padding: 140px 0 80px; }
+}
 @media (max-width: 640px) {
+  .steps { grid-template-columns: 1fr; gap: 32px; }
+  .result-stats { gap: 20px; flex-wrap: wrap; }
+  .hero-stats { flex-direction: column; gap: 20px; }
+  .hero-actions { flex-direction: column; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+  .tg-card { padding: 40px 24px; }
+  .challenge-inner { padding: 28px; }
+  .challenge-capital { font-size: 36px; }
+  /* Hide non-essential nav links on mobile */
   .nav-links { display: none; }
-  .hero { padding: 5rem 1.2rem 3rem; }
-  .stats { grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
-  .stat-card { padding: 1.2rem 0.8rem; }
-  .stat-num { font-size: 1.6rem; }
+  .challenge-features { grid-template-columns: 1fr !important; }
 }
+
+/* ── Scrolled state via JS ── */
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">@papaleshapro<span>.</span></a>
-  <ul class="nav-links">
-    <li><a href="#услуги">Услуги</a></li>
-    <li><a href="#процесс">Как работаем</a></li>
-    <li><a href="#faq">FAQ</a></li>
-  </ul>
-  <a href="https://t.me/papaleshapro" class="nav-cta">Telegram →</a>
+<nav class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="logo-icon">📊</div>
+      Prop Trading Lab
+    </a>
+    <ul class="nav-links">
+      <li><a href="#what">О пропе</a></li>
+      <li><a href="#challenges">Челленджи</a></li>
+      <li><a href="#how">Как работает</a></li>
+      <li><a href="#results">Результаты</a></li>
+    </ul>
+    <a href="https://t.me/Prop_Trading_Lab" target="_blank" class="nav-cta">Вступить →</a>
+  </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
-    <div class="hero-badge">🤖 AI-консалтинг · 2026</div>
-    <h1>Передайте рутину <span class="accent">AI-ассистентам</span>.<br>Сосредоточьтесь на росте.</h1>
-    <p>Внедряем AI в бизнес-процессы — от автоматизации ответов клиентам до интеллектуальных пайплайнов. Без хайпа, с конкретными результатами.</p>
-    <div class="hero-buttons">
-      <a href="https://t.me/papaleshapro" class="btn btn-primary">Написать в Telegram</a>
-      <a href="#услуги" class="btn btn-secondary">Узнать больше</a>
+  <div class="container hero-grid">
+    <div>
+      <div class="hero-badge animate d-1">
+        <span class="pulse"></span>
+        Новый набор на челлендж — июнь 2026
+      </div>
+      <h1 class="animate d-2">
+        Пройди челлендж.<br>
+        Получи <span class="accent">funded account</span>.<br>
+        Торгуй за счёт компании.
+      </h1>
+      <p class="hero-desc animate d-3">
+        Проп-трейдинг — когда компания даёт тебе капитал в управление.
+        Ты торгуешь, получаешь прибыль и забираешь до 90%.
+        Без риска своими деньгами.
+      </p>
+      <div class="hero-actions animate d-4">
+        <a href="https://t.me/Prop_Trading_Lab" target="_blank" class="btn-primary">
+          Начать →
+        </a>
+        <a href="#challenges" class="btn-secondary">
+          Смотреть программы
+        </a>
+      </div>
+      <div class="hero-stats animate d-5">
+        <div>
+          <div class="stat-num"><span class="accent">$0</span></div>
+          <div class="stat-label">Своих рисков</div>
+        </div>
+        <div>
+          <div class="stat-num"><span class="accent">90%</span></div>
+          <div class="stat-label">Прибыли твои</div>
+        </div>
+        <div>
+          <div class="stat-num mono" id="counter">$2.4M</div>
+          <div class="stat-label">Выплачено трейдерам</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual animate d-4">
+      <div class="ticker-card">
+        <div class="ticker-header">
+          <span class="ticker-title">Live-лента сделок</span>
+          <span class="ticker-status"><span class="pulse"></span> LIVE</span>
+        </div>
+        <div class="ticker-row">
+          <div class="trade-pair">
+            <span class="pair-icon bull">📈</span>
+            EUR/USD
+          </div>
+          <div class="trade-info">
+            <div class="trade-pnl positive" id="pnl1">+$1,247</div>
+            <div class="trade-size">0.5 lot · 47 min</div>
+          </div>
+        </div>
+        <div class="ticker-row">
+          <div class="trade-pair">
+            <span class="pair-icon bull">🥇</span>
+            XAU/USD
+          </div>
+          <div class="trade-info">
+            <div class="trade-pnl positive" id="pnl2">+$3,890</div>
+            <div class="trade-size">1.2 lot · 2h 15m</div>
+          </div>
+        </div>
+        <div class="ticker-row">
+          <div class="trade-pair">
+            <span class="pair-icon bear">📉</span>
+            GBP/JPY
+          </div>
+          <div class="trade-info">
+            <div class="trade-pnl negative" id="pnl3">–$420</div>
+            <div class="trade-size">0.3 lot · 1h 03m</div>
+          </div>
+        </div>
+        <div class="ticker-row">
+          <div class="trade-pair">
+            <span class="pair-icon bull">📈</span>
+            NAS100
+          </div>
+          <div class="trade-info">
+            <div class="trade-pnl positive" id="pnl4">+$2,156</div>
+            <div class="trade-size">2.0 lot · 35 min</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="stat-card">
-    <div class="stat-num">15+</div>
-    <div class="stat-label">AI-ассистентов в продакшене</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-num">10</div>
-    <div class="stat-label">бизнес-процессов автоматизировано</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-num">5×</div>
-    <div class="stat-label">ROI средний результат</div>
-  </div>
-</div>
-
-<!-- SERVICES -->
-<section class="section" id="услуги">
-  <div class="section-label">Услуги</div>
-  <div class="section-title">Что мы делаем</div>
-  <div class="section-desc">Практические решения для бизнеса — от аудита до полной автоматизации.</div>
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-icon">🔍</div>
-      <h3>AI-аудит процессов</h3>
-      <p>Анализируем ваши текущие процессы и определяем, где AI даст максимальный эффект. Конкретный план с цифрами.</p>
+<!-- WHAT IS PROP -->
+<section class="section" id="what">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Разобраться за 2 минуты</span>
+      <h2 class="section-title">Что такое проп-трейдинг?</h2>
+      <p class="section-desc">
+        Три простых факта, которые меняют всё
+      </p>
     </div>
-    <div class="service-card">
-      <div class="service-icon">🤖</div>
-      <h3>Внедрение AI-ассистентов</h3>
-      <p>Создаём и настраиваем AI-ассистентов под ваши задачи: поддержка клиентов, контент, аналитика, документооборот.</p>
-    </div>
-    <div class="service-card">
-      <div class="service-icon">⚡</div>
-      <h3>Автоматизация пайплайнов</h3>
-      <p>Собираем сквозные workflow: от лида до сделки, от идеи до поста. Минимум ручных операций.</p>
-    </div>
-    <div class="service-card">
-      <div class="service-icon">📊</div>
-      <h3>AI-маркетинг</h3>
-      <p>Генерация контента, SMM-автоматизация, персонализация коммуникаций — всё на базе AI-инструментов.</p>
-    </div>
-    <div class="service-card">
-      <div class="service-icon">🏗️</div>
-      <h3>Архектура AI-систем</h3>
-      <p>Проектируем мультиагентные системы для сложных бизнес-задач, когда одного ассистента недостаточно.</p>
-    </div>
-    <div class="service-card">
-      <div class="service-icon">🎓</div>
-      <h3>Обучение команды</h3>
-      <p>Показываем вашей команде, как эффективно работать с AI-инструментами. Практика, а не теория.</p>
+    <div class="prop-grid">
+      <div class="prop-card animate">
+        <div class="prop-icon purple">🏢</div>
+        <h3>Чужой капитал</h3>
+        <p>Проп-компания даёт тебе деньги в управление — от $10K до $400K. Не твои, поэтому торгуешь без страха потерять свои сбережения.</p>
+      </div>
+      <div class="prop-card animate">
+        <div class="prop-icon green">💰</div>
+        <h3>Разделяешь прибыль</h3>
+        <p>Заработал $10,000? Обычно 80-90% — твои. Компания забирает остальное как плату за предоставленный капитал.</p>
+      </div>
+      <div class="prop-card animate">
+        <div class="prop-icon blue">📝</div>
+        <h3>Челлендж — фильтр</h3>
+        <p>Покажи навык на демо-счёте: соблюдай дроудан-лимит и финансовую цель. Пройди — получи реальный funded account.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- PROCESS -->
-<section class="section" id="процесс">
-  <div class="section-label">Как работаем</div>
-  <div class="section-title">Простой процесс</div>
-  <div class="section-desc">Без бюрократии. Быстро стартуем, быстро показываем результат.</div>
-  <div class="process-steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <h4>Диагностика</h4>
-      <p>Разбираемся в вашем бизнесе и находим «узкие места»</p>
+<!-- CHALLENGES -->
+<section class="section" id="challenges" style="background: var(--bg-elevated);">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Программы</span>
+      <h2 class="section-title">Выбери свой челлендж</h2>
+      <p class="section-desc">
+        Три уровня капитала. Одни правила.
+      </p>
     </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <h4>Прототип</h4>
-      <p>Собираем рабочий прототип за 3-5 дней</p>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <h4>Внедрение</h4>
-      <p>Интегрируем решение в ваши текущие процессы</p>
-    </div>
-    <div class="step">
-      <div class="step-num">4</div>
-      <h4>Масштаб</h4>
-      <p>Оптимизируем и расширяем на другие отделы</p>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIAL -->
-<section class="section">
-  <div class="section-label">Отзывы</div>
-  <div class="section-title">Что говорят клиенты</div>
-  <div class="testimonial">
-    <blockquote>Автоматизировали 80% рутинных ответов поддержки за 2 недели. Команда сосредоточилась на сложных кейсах, а NPS вырос на 12 пунктов.</blockquote>
-    <div class="testimonial-author">— CEO SaaS-стартапа, Москва</div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="section" id="faq">
-  <div class="section-label">FAQ</div>
-  <div class="section-title">Частые вопросы</div>
-  <div class="faq-list">
-    <div class="faq-item">
-      <button class="faq-q">Сколько стоит внедрение AI?</button>
-      <div class="faq-a">Зависит от задачи. Аудит — от 30 000 ₽. Полноценный AI-ассистент — от 80 000 ₽. Сложные мультиагентные системы — обсуждаем отдельно. После диагностики даём точную оценку.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q">А если у нас нет IT-команды?</button>
-      <div class="faq-a">Это не проблема. Внедряем без программистов — используем no-code и low-code решения. Ваша команда учится работать с AI-инструментами за 1-2 дня.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q">Какие инструменты используете?</button>
-      <div class="faq-a">OpenAI GPT, Claude, open-source модели (Llama, Mistral), плюс специализированные платформы. Подбираем стек под задачу и бюджет.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q">Когда будет виден результат?</button>
-      <div class="faq-a">Первые результаты — через неделю после старта. Полный эффект — через 2-4 недели в зависимости от сложности процесса.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q">Конфиденциальность данных?</button>
-      <div class="faq-a">Работаем по NDA. Возможна установка моделей на ваши серверы (on-premise). Данные не передаём третьим лицам.</div>
+    <div class="challenges-grid">
+      <div class="challenge-card animate">
+        <div class="challenge-inner">
+          <div class="challenge-tier t1">Стартовый</div>
+          <div class="challenge-capital">$10<span>K</span></div>
+          <div class="challenge-target">Цель: прибыль 8% · Макс. дроудан 8%</div>
+          <ul class="challenge-features">
+            <li>Оценочный период: без лимита дней</li>
+            <li>Мин. 5 торговых дней</li>
+            <li>Твоя доля прибыли: 80%</li>
+            <li>Выплата каждые 2 недели</li>
+            <li>Платформы: MT5 / cTrader</li>
+          </ul>
+          <a href="https://t.me/Prop_Trading_Lab" target="_blank" class="challenge-cta">Узнать подробнее</a>
+        </div>
+      </div>
+      <div class="challenge-card featured animate">
+        <div class="challenge-inner">
+          <div class="challenge-tier t2">Продвинутый</div>
+          <div class="challenge-capital">$50<span>K</span></div>
+          <div class="challenge-target">Цель: прибыль 8% · Макс. дроудан 8%</div>
+          <ul class="challenge-features">
+            <li>Оценочный период: 30 дней</li>
+            <li>Мин. 5 торговых дней</li>
+            <li>Твоя доля прибыли: 85%</li>
+            <li>Выплота каждые 2 недели</li>
+            <li>Персональный наставник</li>
+            <li>Доступ к закрытому каналу</li>
+          </ul>
+          <a href="https://t.me/Prop_Trading_Lab" target="_blank" class="challenge-cta">Вступить</a>
+        </div>
+      </div>
+      <div class="challenge-card animate">
+        <div class="challenge-inner">
+          <div class="challenge-tier t3">Профессиональный</div>
+          <div class="challenge-capital">$100<span>K</span></div>
+          <div class="challenge-target">Цель: прибыль 8% · Макс. дроудан 8%</div>
+          <ul class="challenge-features">
+            <li>Оценочный период: без лимита дней</li>
+            <li>Мин. 5 торговых дней</li>
+            <li>Твоя доля прибыли: 90%</li>
+            <li>Еженедельные выплаты</li>
+            <li>VIP-наставник</li>
+            <li>Скалимый контракт ×4</li>
+          </ul>
+          <a href="https://t.me/Prop_Trading_Lab" target="_blank" class="challenge-cta">Узнать подробнее</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
-<section class="cta">
-  <div class="cta-box">
-    <h2>Готовы обсудить ваш проект?</h2>
-    <p>Напишите в Telegram — расскажу, как AI может сэкономить время и деньги вашего бизнеса. Консультация бесплатная.</p>
-    <a href="https://t.me/papaleshapro" class="btn-telegram" target="_blank">💬 Написать в Telegram</a>
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Как это работает</span>
+      <h2 class="section-title">4 шага к funded account</h2>
+    </div>
+    <div class="steps">
+      <div class="step animate d-1">
+        <div class="step-num">1</div>
+        <h3>Выбери челлендж</h3>
+        <p>Определи уровень капитала, ознакомься с правилами и оформи подписку</p>
+      </div>
+      <div class="step animate d-2">
+        <div class="step-num">2</div>
+        <h3>Пройди оценку</h3>
+        <p>Торгуй на демо с реальными правилами. Соблюдай риск-менеджмент</p>
+      </div>
+      <div class="step animate d-3">
+        <div class="step-num">3</div>
+        <h3>Получи счёт</h3>
+        <p>После прохождения челленджа — funded account на $10K-$100K+ реальными деньгами</p>
+      </div>
+      <div class="step animate d-4">
+        <div class="step-num">4</div>
+        <h3>Зарабатывай</h3>
+        <p>Торгуй, выводи прибыль. До 90% забираешь себе. Компания покрывает убытки</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="section" id="results" style="background: var(--bg-elevated);">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Результаты</span>
+      <h2 class="section-title">Реальные трейдеры. Реальные цифры.</h2>
+    </div>
+    <div class="results-grid">
+      <div class="result-card animate">
+        <div class="result-header">
+          <div class="result-avatar">АК</div>
+          <div>
+            <div class="result-name">Алексей К.</div>
+            <div class="result-acc">Funded Account $50K</div>
+          </div>
+        </div>
+        <div class="result-stats">
+          <div>
+            <div class="result-stat-val green">+$7,340</div>
+            <div class="result-stat-label">Прибыль / мес</div>
+          </div>
+          <div>
+            <div class="result-stat-val">14.7%</div>
+            <div class="result-stat-label">Доходность</div>
+          </div>
+          <div>
+            <div class="result-stat-val">23</div>
+            <div class="result-stat-label">Месяца в деле</div>
+          </div>
+        </div>
+        <div class="result-quote">Прошёл челлендж за 11 дней. Главное — не нарушать свой риск-менеджмент. Убыточных дней было много, но общая картина — плюс.</div>
+      </div>
+      <div class="result-card animate">
+        <div class="result-header">
+          <div class="result-avatar" style="background: linear-gradient(135deg, var(--green), #00b894);">МД</div>
+          <div>
+            <div class="result-name">Мария Д.</div>
+            <div class="result-acc">Funded Account $100K</div>
+          </div>
+        </div>
+        <div class="result-stats">
+          <div>
+            <div class="result-stat-val green">+$12,800</div>
+            <div class="result-stat-label">Прибыль / мес</div>
+          </div>
+          <div>
+            <div class="result-stat-val">12.8%</div>
+            <div class="result-stat-label">Доходность</div>
+          </div>
+          <div>
+            <div class="result-stat-val">9</div>
+            <div class="result-stat-label">Месяца в деле</div>
+          </div>
+        </div>
+        <div class="result-quote">Первый челлендж провалила — переторговала. На второй раз выставила жёсткие лимиты и прошла. Сейчас уже получила 4 выплаты.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TELEGRAM CTA -->
+<section class="telegram-cta">
+  <div class="container">
+    <div class="tg-card animate">
+      <div class="tg-icon">✈️</div>
+      <h2 class="tg-title">Присоединяйся к Prop Trading Lab</h2>
+      <p class="tg-desc">
+        Разборы сделок, разборы челленджей, новости проп-компаний
+        и закрытое комьюнити трейдеров. Бесплатно.
+      </p>
+      <a href="https://t.me/Prop_Trading_Lab" target="_blank" class="tg-btn">
+        ✈️ Перейти в @Prop_Trading_Lab
+      </a>
+    </div>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer>
-  <p>© 2026 @papaleshapro · AI-консалтинг и автоматизация · <a href="https://t.me/papaleshapro">t.me/papaleshapro</a></p>
+<footer class="footer">
+  <div class="container footer-inner">
+    <span>© 2026 Prop Trading Lab. Не является финансовой рекомендацией.</span>
+    <span><a href="https://t.me/Prop_Trading_Lab" target="_blank">t.me/Prop_Trading_Lab</a></span>
+  </div>
 </footer>
 
 <script>
-// FAQ toggle
-document.querySelectorAll('.faq-q').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const item = btn.closest('.faq-item');
-    const ans = item.querySelector('.faq-a');
-    const isOpen = ans.classList.contains('open');
-    // close all
-    document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
-    document.querySelectorAll('.faq-q').forEach(q => q.classList.remove('active'));
-    // toggle current
-    if (!isOpen) { ans.classList.add('open'); btn.classList.add('active'); }
-  });
+// Nav scroll effect
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
 });
+
+// Intersection Observer for animate-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.style.opacity = '1'; });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.animate').forEach(el => {
+  el.addEventListener('animationend', () => { el.style.opacity = '1'; });
+  observer.observe(el);
+});
+
+// Live ticker animation
+function animateTicker() {
+  const pnls = [
+    { el: document.getElementById('pnl1'), base: 1247 },
+    { el: document.getElementById('pnl2'), base: 3890 },
+    { el: document.getElementById('pnl3'), base: -420 },
+    { el: document.getElementById('pnl4'), base: 2156 }
+  ];
+
+  setInterval(() => {
+    pnls.forEach(({el, base}) => {
+      if (!el) return;
+      const delta = Math.floor((Math.random() - 0.3) * 80);
+      const newVal = base + delta;
+      const isPos = newVal >= 0;
+      const formatted = (isPos ? '+' : '–') + '$' + Math.abs(newVal).toLocaleString();
+      el.textContent = formatted;
+      el.className = 'trade-pnl ' + (isPos ? 'positive' : 'negative');
+    });
+  }, 3000);
+}
+animateTicker();
 </script>
 </body>
 </html>
