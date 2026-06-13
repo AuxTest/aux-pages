@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@papaleshapro — AI-консалтинг и автоматизация бизнеса</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --text: #e4e4ef;
+    --muted: #787896;
+    --accent: #7c5bf5;
+    --accent-glow: rgba(124, 91, 245, .35);
+    --green: #34d399;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Glow blob ── */
+  .glow {
+    position: fixed;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    filter: blur(180px);
+    opacity: .12;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glow-1 { top: -200px; left: -100px; background: var(--accent); }
+  .glow-2 { bottom: -200px; right: -100px; background: #5b8af5; }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    backdrop-filter: blur(16px);
+    background: rgba(10,10,15,.7);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px;
+  }
+  nav .logo {
+    font-weight: 700; font-size: 1.1rem;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  nav .logo span { color: var(--muted); font-weight: 400; -webkit-text-fill-color: var(--muted); }
+  nav .tg-link {
+    padding: 8px 20px;
+    background: var(--accent);
+    color: #fff; text-decoration: none;
+    border-radius: 8px; font-weight: 600; font-size: .9rem;
+    transition: box-shadow .3s;
+  }
+  nav .tg-link:hover { box-shadow: 0 0 24px var(--accent-glow); }
+
+  /* ── Sections ── */
+  section { position: relative; z-index: 1; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 800; line-height: 1.15;
+    margin-bottom: 24px;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(135deg, var(--accent), #5b8af5, var(--green));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    font-size: 1.15rem; color: var(--muted);
+    max-width: 600px; margin: 0 auto 40px;
+  }
+  .hero .cta {
+    display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 32px; border-radius: 12px;
+    font-weight: 600; font-size: 1rem;
+    text-decoration: none; transition: all .3s;
+    cursor: pointer; border: none;
+  }
+  .btn-primary {
+    background: var(--accent); color: #fff;
+    box-shadow: 0 4px 24px var(--accent-glow);
+  }
+  .btn-primary:hover { box-shadow: 0 8px 40px var(--accent-glow); transform: translateY(-2px); }
+  .btn-ghost {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--accent); }
+
+  /* ── Stats ── */
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px; padding: 60px 24px;
+    max-width: 900px; margin: 0 auto;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 20px; text-align: center;
+  }
+  .stat-card .num {
+    font-size: 2.2rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat-card .label { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+
+  /* ── Section headings ── */
+  .section-title {
+    text-align: center;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700; margin-bottom: 12px;
+  }
+  .section-sub {
+    text-align: center; color: var(--muted);
+    max-width: 560px; margin: 0 auto 48px;
+  }
+
+  /* ── Services ── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px; padding: 80px 0;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px;
+    transition: border-color .3s, transform .3s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .card .icon {
+    width: 48px; height: 48px;
+    background: var(--accent-glow);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 20px;
+  }
+  .card h3 { font-size: 1.15rem; margin-bottom: 10px; }
+  .card p { color: var(--muted); font-size: .95rem; }
+
+  /* ── How it works ── */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px; padding: 80px 0;
+  }
+  .step { text-align: center; }
+  .step .num {
+    width: 44px; height: 44px;
+    background: var(--accent);
+    color: #fff; font-weight: 700;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 16px; font-size: 1.1rem;
+  }
+  .step h4 { margin-bottom: 8px; }
+  .step p { color: var(--muted); font-size: .9rem; }
+
+  /* ── Testimonial ── */
+  .testimonial {
+    max-width: 700px; margin: 0 auto;
+    text-align: center; padding: 80px 24px;
+  }
+  .testimonial blockquote {
+    font-size: 1.25rem; font-style: italic;
+    color: var(--text); margin-bottom: 20px;
+    line-height: 1.7;
+  }
+  .testimonial .author { color: var(--muted); font-size: .95rem; }
+  .testimonial .author strong { color: var(--text); }
+
+  /* ── CTA bottom ── */
+  .cta-section {
+    text-align: center; padding: 100px 24px;
+  }
+  .cta-section h2 {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700; margin-bottom: 16px;
+  }
+  .cta-section p { color: var(--muted); margin-bottom: 36px; font-size: 1.05rem; }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 24px; text-align: center;
+    color: var(--muted); font-size: .85rem;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: 1fr 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="inner">
+    <div class="logo">papaleshapro <span>× AI</span></div>
+    <a href="https://t.me/papaleshapro" target="_blank" class="tg-link">Telegram →</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div>
+    <h1>Автоматизирую бизнес<br><span class="grad">с помощью AI</span></h1>
+    <p>AI-консалтинг, который внедряю сам. Практик, а не теоретик — показываю рабочие процессы, делюсь ошибками и результатами.</p>
+    <div class="cta">
+      <a href="https://t.me/papaleshapro" target="_blank" class="btn btn-primary">📢 Перейти в канал</a>
+      <a href="#services" class="btn btn-ghost">Что делаю ↓</a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="wrap">
+  <div class="stats">
+    <div class="stat-card">
+      <div class="num">15+</div>
+      <div class="label">AI-агентов в продакшене</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">3</div>
+      <div class="label">Своих AI-проекта</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">100%</div>
+      <div class="label">Практический опыт</div>
+    </div>
+  </div>
+</div>
+
+<!-- Services -->
+<section id="services">
+  <div class="wrap">
+    <h2 class="section-title">Что делаю</h2>
+    <p class="section-sub">Без воды — только то, что внедрил и проверил на себе</p>
+    <div class="services-grid">
+
+      <div class="card">
+        <div class="icon">🤖</div>
+        <h3>AI-автоматизация процессов</h3>
+        <p>Внедряю AI-ассистентов в рутину: от обработки заявок до генерации контента. Показываю конфиги и промпты, которые реально работают.</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">🏗️</div>
+        <h3>Multi-agent архитектура</h3>
+        <p>Проектирую системы из нескольких AI-агентов с разделением ролей. Делюсь схемами, ошибками и паттернами оркестровки.</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">📊</div>
+        <h3>AI для маркетинга</h3>
+        <p>Автоматизация SMM, аналитика, персонализация. Конкретные кейсы с цифрами — что дало результат, а что нет.</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">🔧</div>
+        <h3>Консалтинг и аудит</h3>
+        <p>Разбираю ваши процессы и нахожу, где AI даст максимальный эффект. Честно говорю, когда автоматизация не нужна.</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">📝</div>
+        <h3>Контент из первых рук</h3>
+        <p>Пишу о том, что пробую сам: развёртывание LLM, тонкая настройка, интеграции. Без пересказа чужих статей.</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">⚡</div>
+        <h3>Быстрые прототипы</h3>
+        <p>Собираю рабочие AI-решения за дни, не месяцы. MVP для проверки гипотез без бюджета на команду разработки.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section>
+  <div class="wrap">
+    <h2 class="section-title">Как работаю</h2>
+    <p class="section-sub">Прозрачный процесс без скрытых этапов</p>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h4>Диагностика</h4>
+        <p>Разбираю ваш бизнес-процесс и нахожу точки для AI-автоматизации</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h4>Прототип</h4>
+        <p>Собираю рабочий MVP за 1–3 дня для проверки гипотезы</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h4>Внедрение</h4>
+        <p>Интегрирую решение в ваши процессы, настраиваю мониторинг</p>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <h4>Поддержка</h4>
+        <p>Оптимизирую, масштабирую и обучаю вашу команду</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonial -->
+<section>
+  <div class="testimonial">
+    <blockquote>
+      «Главное — не бояться показывать ошибки. Каждый провальный промпт и упавший агент — это контент, который помогает другим не наступить на те же грабли.»
+    </blockquote>
+    <div class="author">— <strong>@papaleshapro</strong>, практик AI-автоматизации</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Готовы автоматизировать бизнес?</h2>
+  <p>Подписывайтесь на канал — делюсь рабочими кейсами каждую неделю</p>
+  <a href="https://t.me/papaleshapro" target="_blank" class="btn btn-primary">📢 Подписаться на @papaleshapro</a>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 @papaleshapro · AI-консалтинг и автоматизация</p>
+  <p style="margin-top:8px"><a href="https://t.me/papaleshapro" target="_blank">t.me/papaleshapro</a></p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "project": "papaleshapro-landing",
+  "version": "1.0.0",
+  "status": "ready",
+  "created": "2026-06-13",
+  "deploy_target": "github-pages",
+  "deploy_method": "github-actions",
+  "source_path": "deploy/",
+  "entry_file": "index.html",
+  "files": [
+    "index.html",
+    ".publish-flag.json",
+    "README.md"
+  ],
+  "notes": "Single-file landing, dark theme, responsive. No external dependencies. Auto-deploy via GitHub Actions on push to main."
+}
