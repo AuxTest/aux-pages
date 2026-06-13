@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PropGuard — Защити свой funded account</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#08080c;--surface:#101018;--surface2:#18181f;--border:#252535;
+--text:#e8e8f0;--text-dim:#7878a0;--accent:#f7931a;--accent2:#ffb84d;
+--accent-glow:rgba(247,147,26,.3);--red:#ff4757;--green:#2ed573;--blue:#5352ed;
+--gradient:linear-gradient(135deg,#f7931a,#ff6b35);
+--gradient2:linear-gradient(135deg,#f7931a,#5352ed);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* ---- NAV ---- */
+nav{position:sticky;top:0;z-index:100;background:rgba(8,8,12,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-weight:800;font-size:1.05rem;display:flex;align-items:center;gap:8px}
+.nav-logo em{font-style:normal;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;align-items:center;gap:20px;font-size:.85rem;color:var(--text-dim)}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{padding:8px 20px;border-radius:8px;background:var(--gradient);color:#fff;font-size:.85rem;font-weight:700;transition:opacity .2s}
+.nav-cta:hover{opacity:.85}
+
+/* ---- HERO ---- */
+.hero{padding:90px 0 72px;text-align:center;position:relative}
+.hero::before{content:'';position:absolute;top:-160px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(247,147,26,.12) 0%,transparent 65%);pointer-events:none;z-index:0}
+.hero *{position:relative;z-index:1}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:var(--surface2);border:1px solid var(--border);font-size:.8rem;color:var(--text-dim);margin-bottom:24px}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3.6rem);font-weight:900;line-height:1.1;margin-bottom:20px;letter-spacing:-.03em}
+.hero h1 .grad{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.1rem;color:var(--text-dim);max-width:600px;margin:0 auto 16px;line-height:1.7}
+.hero-sub strong{color:var(--text);font-weight:600}
+.hero-fear{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;background:rgba(255,71,87,.08);border:1px solid rgba(255,71,87,.2);font-size:.88rem;color:var(--red);margin-bottom:32px}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:15px 34px;border-radius:12px;background:var(--gradient);color:#fff;font-size:1rem;font-weight:700;transition:transform .2s,box-shadow .2s;border:none;cursor:pointer}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 35px var(--accent-glow)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;padding:15px 34px;border-radius:12px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:1rem;font-weight:600;transition:border-color .2s}
+.btn-secondary:hover{border-color:var(--accent)}
+
+/* ---- DASHBOARD PREVIEW ---- */
+.preview{margin-top:52px;border-radius:16px;border:1px solid var(--border);overflow:hidden;background:var(--surface);max-width:800px;margin-left:auto;margin-right:auto}
+.preview-header{display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.preview-dot{width:10px;height:10px;border-radius:50%}
+.preview-dot.r{background:#ff5f57}.preview-dot.y{background:#febc2e}.preview-dot.g{background:#28c840}
+.preview-url{margin-left:8px;font-size:.75rem;color:var(--text-dim);background:var(--bg);padding:4px 12px;border-radius:6px;flex:1;text-align:center}
+.preview-body{padding:24px 28px}
+.preview-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.preview-stat{text-align:center;padding:14px;border-radius:10px;background:var(--bg);border:1px solid var(--border)}
+.preview-stat .val{font-size:1.3rem;font-weight:800}
+.preview-stat .val.ok{color:var(--green)}.preview-stat .val.warn{color:var(--accent)}.preview-stat .val.danger{color:var(--red)}
+.preview-stat .lbl{font-size:.7rem;color:var(--text-dim);margin-top:4px}
+.preview-bar{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;background:var(--bg);border:1px solid var(--border);margin-bottom:10px;font-size:.85rem}
+.preview-bar .indicator{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.preview-bar .indicator.g{background:var(--green)}.preview-bar .indicator.o{background:var(--accent)}.preview-bar .indicator.r{background:var(--red)}
+.preview-bar .label{flex:1}.preview-bar .value{font-weight:700}
+
+/* ---- PAIN ---- */
+.pain{padding:72px 0;border-top:1px solid var(--border)}
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pain-card{padding:28px;border-radius:16px;background:var(--surface);border:1px solid rgba(255,71,87,.15);transition:border-color .25s,transform .25s;text-align:center}
+.pain-card:hover{border-color:var(--red);transform:translateY(-3px)}
+.pain-icon{font-size:2.4rem;margin-bottom:14px}
+.pain-card h3{font-size:1rem;font-weight:700;margin-bottom:8px;color:var(--red)}
+.pain-card p{font-size:.85rem;color:var(--text-dim);line-height:1.6}
+
+/* ---- SECTION ---- */
+.section{padding:80px 0}
+.section+.section{border-top:1px solid var(--border)}
+.sec-header{text-align:center;margin-bottom:52px}
+.sec-tag{display:inline-block;padding:4px 12px;border-radius:6px;background:rgba(247,147,26,.1);color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+.sec-title{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.sec-desc{color:var(--text-dim);max-width:560px;margin:0 auto;font-size:1rem;line-height:1.7}
+
+/* ---- FEATURES ---- */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feature-card{padding:28px;border-radius:16px;background:var(--surface);border:1px solid var(--border);transition:border-color .25s,transform .25s}
+.feature-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.feature-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:16px;background:rgba(247,147,26,.08);border:1px solid rgba(247,147,26,.15)}
+.feature-card h3{font-size:1.05rem;font-weight:700;margin-bottom:8px}
+.feature-card p{font-size:.88rem;color:var(--text-dim);line-height:1.6}
+
+/* ---- HOW IT WORKS ---- */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative}
+.steps::before{content:'';position:absolute;top:38px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--accent),var(--blue));opacity:.25}
+.step{text-align:center;position:relative}
+.step-num{width:44px;height:44px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;background:var(--surface2);border:2px solid var(--accent);color:var(--accent);position:relative;z-index:1}
+.step h3{font-size:.95rem;font-weight:700;margin-bottom:8px}
+.step p{font-size:.82rem;color:var(--text-dim);line-height:1.6}
+
+/* ---- COMPATIBILITY ---- */
+.compat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.compat-item{padding:20px;border-radius:12px;background:var(--surface);border:1px solid var(--border);text-align:center;transition:border-color .25s}
+.compat-item:hover{border-color:var(--accent)}
+.compat-logo{font-size:1.8rem;margin-bottom:8px}
+.compat-name{font-size:.85rem;font-weight:600}
+.compat-type{font-size:.72rem;color:var(--text-dim);margin-top:4px}
+
+/* ---- PRICING ---- */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.price-card{padding:32px;border-radius:16px;background:var(--surface);border:1px solid var(--border);text-align:center;position:relative;transition:border-color .25s,transform .25s}
+.price-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.price-card.popular{border-color:var(--accent);background:linear-gradient(180deg,rgba(247,147,26,.06) 0%,var(--surface) 100%)}
+.price-card.popular::before{content:'Популярный';position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:4px 14px;border-radius:100px;background:var(--gradient);color:#fff;font-size:.7rem;font-weight:700}
+.price-name{font-size:.85rem;color:var(--text-dim);margin-bottom:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.price-val{font-size:2.6rem;font-weight:900;margin-bottom:4px}
+.price-val .currency{font-size:1.2rem;font-weight:700}
+.price-period{font-size:.8rem;color:var(--text-dim);margin-bottom:20px}
+.price-features{text-align:left;margin-bottom:24px}
+.price-features li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;font-size:.85rem;color:var(--text-dim);list-style:none;border-bottom:1px solid var(--border)}
+.price-features li:last-child{border-bottom:none}
+.price-features li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0}
+.price-btn{display:block;padding:12px;border-radius:10px;text-align:center;font-weight:700;font-size:.9rem;transition:opacity .2s}
+.price-btn.solid{background:var(--gradient);color:#fff}
+.price-btn.outline{background:var(--surface2);border:1px solid var(--border);color:var(--text)}
+.price-btn:hover{opacity:.85}
+
+/* ---- FAQ ---- */
+.faq-list{max-width:720px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;padding:20px 0;background:none;border:none;color:var(--text);font-size:1rem;font-weight:600;cursor:pointer;text-align:left;font-family:inherit}
+.faq-q:hover{color:var(--accent)}
+.faq-arrow{color:var(--accent);font-size:1.2rem;transition:transform .3s;flex-shrink:0;margin-left:16px}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease}
+.faq-item.open .faq-a{max-height:300px;padding-bottom:20px}
+.faq-a p{font-size:.9rem;color:var(--text-dim);line-height:1.7}
+
+/* ---- CTA ---- */
+.cta-section{text-align:center;padding:100px 0}
+.cta-section h2{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:800;margin-bottom:16px;letter-spacing:-.02em}
+.cta-section h2 .grad{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cta-section p{color:var(--text-dim);font-size:1.05rem;max-width:520px;margin:0 auto 36px;line-height:1.7}
+.cta-big{padding:18px 44px;font-size:1.15rem;border-radius:14px}
+.cta-note{font-size:.8rem;color:var(--text-dim);margin-top:16px}
+
+/* ---- FOOTER ---- */
+footer{border-top:1px solid var(--border);padding:28px 0;text-align:center}
+footer p{font-size:.8rem;color:var(--text-dim)}
+footer a{color:var(--accent);text-decoration:underline}
+
+/* ---- RESPONSIVE ---- */
+@media(max-width:768px){
+.preview-stats{grid-template-columns:repeat(2,1fr)}
+.pain-grid{grid-template-columns:1fr}
+.features-grid{grid-template-columns:1fr}
+.steps{grid-template-columns:repeat(2,1fr)}
+.steps::before{display:none}
+.compat-grid{grid-template-columns:repeat(2,1fr)}
+.pricing-grid{grid-template-columns:1fr}
+.hero{padding:64px 0 48px}
+.section{padding:56px 0}
+.cta-section{padding:64px 0}
+}
+@media(max-width:480px){
+.steps{grid-template-columns:1fr}
+.compat-grid{grid-template-columns:repeat(2,1fr)}
+.cta-row{flex-direction:column;align-items:center}
+.btn-primary,.btn-secondary{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav><div class="wrap">
+<a href="#" class="nav-logo">🛡️ <em>PropGuard</em></a>
+<div class="nav-links">
+<a href="#features">Возможности</a>
+<a href="#pricing">Цены</a>
+<a href="#faq">FAQ</a>
+<a href="#install" class="nav-cta">Установить →</a>
+</div>
+</div></nav>
+
+<!-- HERO -->
+<section class="hero">
+<div class="wrap">
+<div class="badge"><span class="dot"></span> Chrome Extension — Бесплатно</div>
+<h1>Не потеряй <span class="grad">funded account</span> из-за невнимательности</h1>
+<p class="hero-sub">PropGuard контролирует лимиты в реальном времени прямо в терминале проп-фирмы. <strong>FTMO, MyForexFunds, The5ers</strong> и другие — один клик.</p>
+<div class="hero-fear">⚠️ 73% трейдеров теряют funded account из-за нарушения дроудаун-лимита</div>
+<div class="cta-row">
+<a href="#install" class="btn-primary">🛡️ Установить бесплатно</a>
+<a href="#features" class="btn-secondary">Как это работает ↓</a>
+</div>
+
+<!-- Dashboard Preview -->
+<div class="preview">
+<div class="preview-header">
+<div class="preview-dot r"></div>
+<div class="preview-dot y"></div>
+<div class="preview-dot g"></div>
+<div class="preview-url">app.ftmo.com/trading</div>
+</div>
+<div class="preview-body">
+<div class="preview-stats">
+<div class="preview-stat"><div class="val ok">$97,420</div><div class="lbl">Баланс</div></div>
+<div class="preview-stat"><div class="val warn">$3,580</div><div class="lbl">Дроудаун ост.</div></div>
+<div class="preview-stat"><div class="val ok">2.1 лота</div><div class="lbl">Макс. лот</div></div>
+<div class="preview-stat"><div class="val danger">14:32</div><div class="lbl">До лимита дня</div></div>
+</div>
+<div class="preview-bar"><span class="indicator g"></span><span class="label">Daily Loss Limit</span><span class="value" style="color:var(--green)">-$1,420 / -$5,000</span></div>
+<div class="preview-bar"><span class="indicator o"></span><span class="label">Max Drawdown</span><span class="value" style="color:var(--accent)">-$3,580 / -$10,000</span></div>
+<div class="preview-bar"><span class="indicator r"></span><span class="label">Trading Time</span><span class="value" style="color:var(--red)">14:32 / 16:00 min</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- PAIN -->
+<section class="pain"><div class="wrap">
+<div class="sec-header">
+<div class="sec-tag">Проблема</div>
+<h2 class="sec-title">Знакомо?</h2>
+<p class="sec-desc">Тысячи трейдеров теряют funded accounts каждый месяц — не из-за плохой стратегии, а из-за простых ошибок</p>
+</div>
+<div class="pain-grid">
+<div class="pain-card">
+<div class="pain-icon">😤</div>
+<h3>Нарушил дроудаун</h3>
+<p>Серия убыточных сделок — и лимит пробит. Челлендж провален. Месяц работы впустую.</p>
+</div>
+<div class="pain-card">
+<div class="pain-icon">⏰</div>
+<h3>Забыл про тайм-лимиты</h3>
+<p>Торговал меньше минимальное количество дней — и всё, правила нарушены. Даже в плюсе.</p>
+</div>
+<div class="pain-card">
+<div class="pain-icon">📊</div>
+<h3>Не отследил объём</h3>
+<p>Позиция оказалась больше максимального лота. Нарушение зафиксировано — счёт заблокирован.</p>
+</div>
+</div>
+</div></section>
+
+<!-- FEATURES -->
+<section class="section" id="features"><div class="wrap">
+<div class="sec-header">
+<div class="sec-tag">Возможности</div>
+<h2 class="sec-title">Всё, что нужно для защиты счёта</h2>
+<p class="sec-desc">PropGuard работает в фоне и предупреждает до того, как будет поздно</p>
+</div>
+<div class="features-grid">
+<div class="feature-card">
+<div class="feature-icon">📉</div>
+<h3>Контроль дроудауна</h3>
+<p>Отслеживает текущий дроудаун в реальном времени. Предупреждает при приближении к лимиту — визуально и звуком.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">⏱️</div>
+<h3>Тайм-лимиты</h3>
+<p>Счётчик торговых дней, минимальное время торговли, период оценки — все временные правила под контролем.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">📐</div>
+<h3>Лимиты позиций</h3>
+<p>Максимальный лот, суммарный объём, количество открытых позиций — PropGuard не дашь превысить норму.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">🔔</div>
+<h3>Умные алерты</h3>
+<p>Настраиваемые уведомления: визуальные оверлеи, звуковые сигналы, push в Telegram. Выбираешь сам, как получать.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">📋</div>
+<h3>Дневник нарушений</h3>
+<p>Автоматический лог всех приближений к лимитам. Анализируй ошибки и не повторяй их в следующем челлендже.</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">🎯</div>
+<h3>Калькулятор риска</h3>
+<p>Рассчитай безопасный размер позиции с учётом текущего дроудауна и дневного лимита — прямо в терминале.</p>
+</div>
+</div>
+</div></section>
+
+<!-- HOW IT WORKS -->
+<section class="section"><div class="wrap">
+<div class="sec-header">
+<div class="sec-tag">Начало работы</div>
+<h2 class="sec-title">4 шага до защиты счёта</h2>
+</div>
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<h3>Установи расширение</h3>
+<p>Бесплатно из Chrome Web Store. Один клик, 30 секунд.</p>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<h3>Открой терминал проп-фирмы</h3>
+<p>PropGuard автоматически определит платформу и подгрузит правила твоего челленджа.</p>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<h3>Настрой алерты</h3>
+<p>Выбери пороги предупреждений: 80%, 90%, 95% от лимита.</p>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<h3>Торгуй спокойно</h3>
+<p>PropGuard следит за всеми параметрами, пока ты фокусируешься на сделках.</p>
+</div>
+</div>
+</div></section>
+
+<!-- COMPATIBILITY -->
+<section class="section"><div class="wrap">
+<div class="sec-header">
+<div class="sec-tag">Совместимость</div>
+<h2 class="sec-title">Поддерживаемые платформы</h2>
+<p class="sec-desc">Работает с крупнейшими проп-фирмами. Список растёт каждый месяц.</p>
+</div>
+<div class="compat-grid">
+<div class="compat-item"><div class="compat-logo">🏦</div><div class="compat-name">FTMO</div><div class="compat-type">Evaluation + Funded</div></div>
+<div class="compat-item"><div class="compat-logo">💱</div><div class="compat-name">MyForexFunds</div><div class="compat-type">Stellar + Evaluation</div></div>
+<div class="compat-item"><div class="compat-logo">🔥</div><div class="compat-name">The5ers</div><div class="compat-type">Hyper Growth</div></div>
+<div class="compat-item"><div class="compat-logo">📈</div><div class="compat-name">TopStep</div><div class="compat-type">Trading Combine</div></div>
+<div class="compat-item"><div class="compat-logo">⚡</div><div class="compat-name">Funded Next</div><div class="compat-type">Stellar + Evaluation</div></div>
+<div class="compat-item"><div class="compat-logo">🎯</div><div class="compat-name">True Forex Funds</div><div class="compat-type">Evaluation</div></div>
+<div class="compat-item"><div class="compat-logo">💎</div><div class="compat-name">My Funded FX</div><div class="compat-type">Evaluation + Funded</div></div>
+<div class="compat-item"><div class="compat-logo">➕</div><div class="compat-name">Скоро ещё</div><div class="compat-type">Запроси платформу</div></div>
+</div>
+</div></section>
+
+<!-- PRICING -->
+<section class="section" id="pricing"><div class="wrap">
+<div class="sec-header">
+<div class="sec-tag">Тарифы</div>
+<h2 class="sec-title">Начни бесплатно</h2>
+<p class="sec-desc">Бесплатной версии достаточно для большинства трейдеров. Pro — для тех, кто торгует на нескольких счетах.</p>
+</div>
+<div class="pricing-grid">
+<div class="price-card">
+<div class="price-name">Free</div>
+<div class="price-val"><span class="currency">$</span>0</div>
+<div class="price-period">навсегда</div>
+<ul class="price-features">
+<li>Контроль дроудауна</li>
+<li>Тайм-лимиты</li>
+<li>1 платформа</li>
+<li>Базовые алерты</li>
+<li>Дневник нарушений</li>
+</ul>
+<a href="#install" class="price-btn outline">Установить</a>
+</div>
+<div class="price-card popular">
+<div class="price-name">Pro</div>
+<div class="price-val"><span class="currency">$</span>9</div>
+<div class="price-period">/ месяц</div>
+<ul class="price-features">
+<li>Всё из Free</li>
+<li>До 5 платформ</li>
+<li>Калькулятор риска</li>
+<li>Telegram-алерты</li>
+<li>Приоритетная поддержка</li>
+<li>Расширенная аналитика</li>
+</ul>
+<a href="#install" class="price-btn solid">Попробовать 14 дней</a>
+</div>
+<div class="price-card">
+<div class="price-name">Team</div>
+<div class="price-val"><span class="currency">$</span>29</div>
+<div class="price-period">/ месяц</div>
+<ul class="price-features">
+<li>Всё из Pro</li>
+<li>До 20 трейдеров</li>
+<li>Общий дашборд</li>
+<li>API-доступ</li>
+<li>Кастомные правила</li>
+<li>Выделенный менеджер</li>
+</ul>
+<a href="#install" class="price-btn outline">Связаться</a>
+</div>
+</div>
+</div></section>
+
+<!-- FAQ -->
+<section class="section" id="faq"><div class="wrap">
+<div class="sec-header">
+<div class="sec-tag">FAQ</div>
+<h2 class="sec-title">Частые вопросы</h2>
+</div>
+<div class="faq-list">
+<div class="faq-item">
+<button class="faq-q">PropGuard не даст мне нарушить правила?<span class="faq-arrow">▾</span></button>
+<div class="faq-a"><p>PropGuard предупреждает при приближении к лимитам, но не блокирует сделки. Решение о входе в позицию всегда за тобой. Мы — твой второй пилот, а не автопилот.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q">Расширение безопасно? У меня же доступ к счёту.<span class="faq-arrow">▾</span></button>
+<div class="faq-a"><p>PropGuard работает только как оверлей поверх терминала. Мы не получаем доступ к твоему счёту, не видим пароли и не можем совершать сделки. Все данные хранятся локально в браузере.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q">Работает ли на MetaTrader / cTrader терминалах?<span class="faq-arrow">▾</span></button>
+<div class="faq-a"><p>Сейчас PropGuard работает с веб-терминалами проп-фирм (FTMO, MyForexFunds и др.). Поддержка MetaTrader 5 и cTrader в разработке — ожидай в Q3 2026.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q">Могу ли я использовать на нескольких счетах?<span class="faq-arrow">▾</span></button>
+<div class="faq-a"><p>В бесплатной версии — 1 платформа. В Pro — до 5 платформ одновременно. В Team — до 20 трейдеров с общим дашбордом.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-q">Как быстро добавляете новые проп-фирмы?<span class="faq-arrow">▾</span></button>
+<div class="faq-a"><p>Обычно 1–3 рабочих дня после запроса. Напиши нам название платформы — мы приоритизируем интеграцию.</p></div>
+</div>
+</div>
+</div></section>
+
+<!-- CTA -->
+<section class="cta-section" id="install"><div class="wrap">
+<h2>Перестань терять <span class="grad">funded accounts</span></h2>
+<p>Установи PropGuard бесплатно и торгуй с уверенностью. Твой следующий челлендж — будет пройден.</p>
+<a href="#" class="btn-primary cta-big">🛡️ Установить из Chrome Web Store</a>
+<p class="cta-note">Бесплатно · Установка за 30 секунд · Без регистрации</p>
+</div></section>
+
+<!-- FOOTER -->
+<footer><div class="wrap">
+<p>© 2026 <a href="#">PropGuard</a> · Chrome Extension для проп-трейдеров · <a href="https://t.me/Prop_Trading_Lab" target="_blank">@Prop_Trading_Lab</a></p>
+</div></footer>
+
+<script>
+document.querySelectorAll('.faq-q').forEach(btn=>{
+btn.addEventListener('click',()=>{
+const item=btn.parentElement;
+const isOpen=item.classList.contains('open');
+document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+if(!isOpen) item.classList.add('open');
+});
+});
+</script>
+
+</body>
+</html>
