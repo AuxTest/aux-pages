@@ -1,668 +1,385 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-аудит бизнеса — найдите точки роста с помощью ИИ</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #1a1a28;
-            --accent: #6c5ce7;
-            --accent-glow: #6c5ce744;
-            --text-primary: #f0f0f5;
-            --text-secondary: #9090a8;
-            --border: #2a2a3a;
-            --gradient-1: linear-gradient(135deg, #6c5ce7, #a29bfe);
-            --gradient-2: linear-gradient(135deg, #6c5ce7 0%, #00cec9 100%);
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Ambient background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(ellipse at 30% 20%, #6c5ce711 0%, transparent 50%),
-                        radial-gradient(ellipse at 70% 80%, #00cec908 0%, transparent 50%);
-            z-index: -1;
-            animation: ambientShift 20s ease-in-out infinite alternate;
-        }
-
-        @keyframes ambientShift {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-5%, -3%); }
-        }
-
-        /* Nav */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            background: linear-gradient(to bottom, var(--bg-primary), transparent);
-            backdrop-filter: blur(10px);
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 700;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-cta {
-            padding: 10px 24px;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
-
-        .nav-cta:hover {
-            background: #7d6ff0;
-            box-shadow: 0 0 20px var(--accent-glow);
-            transform: translateY(-1px);
-        }
-
-        /* Hero */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 120px 40px 80px;
-            text-align: center;
-        }
-
-        .hero-content {
-            max-width: 800px;
-        }
-
-        .label {
-            display: inline-block;
-            padding: 6px 16px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 28px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.2rem, 5vw, 3.8rem);
-            font-weight: 800;
-            line-height: 1.15;
-            margin-bottom: 24px;
-            letter-spacing: -1px;
-        }
-
-        .hero h1 .gradient-text {
-            background: var(--gradient-2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.15rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 40px;
-            line-height: 1.7;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            padding: 16px 36px;
-            background: var(--gradient-1);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--accent-glow);
-        }
-
-        .btn-secondary {
-            padding: 16px 36px;
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
-
-        /* Stats */
-        .stats {
-            padding: 60px 40px;
-            display: flex;
-            justify-content: center;
-            gap: 60px;
-            flex-wrap: wrap;
-            border-top: 1px solid var(--border);
-            background: var(--bg-secondary);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
-
-        /* Pain section */
-        .section {
-            padding: 100px 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-header h2 {
-            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .section-header p {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-            max-width: 550px;
-            margin: 0 auto;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 36px 28px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--gradient-1);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px #6c5ce715;
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        .card-icon {
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
-
-        .card h3 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .card p {
-            color: var(--text-secondary);
-            font-size: 0.92rem;
-            line-height: 1.65;
-        }
-
-        /* Process section */
-        .process-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .step {
-            display: flex;
-            gap: 28px;
-            align-items: flex-start;
-            position: relative;
-        }
-
-        .step-marker {
-            flex-shrink: 0;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 2px solid var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.1rem;
-            color: var(--accent);
-            position: relative;
-            z-index: 2;
-        }
-
-        .step-line {
-            position: absolute;
-            left: 23px;
-            top: 48px;
-            bottom: 0;
-            width: 2px;
-            background: var(--border);
-        }
-
-        .step:last-child .step-line {
-            display: none;
-        }
-
-        .step-content {
-            padding-bottom: 40px;
-        }
-
-        .step-content h3 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .step-content p {
-            color: var(--text-secondary);
-            font-size: 0.92rem;
-            line-height: 1.6;
-        }
-
-        /* CTA section */
-        .cta-section {
-            padding: 100px 40px;
-            text-align: center;
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .cta-section h2 {
-            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .cta-section p {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-            margin-bottom: 40px;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Form */
-        .cta-form {
-            max-width: 480px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .cta-form input,
-        .cta-form textarea {
-            padding: 14px 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            font-family: inherit;
-            transition: border-color 0.3s;
-        }
-
-        .cta-form input::placeholder,
-        .cta-form textarea::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .cta-form input:focus,
-        .cta-form textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        .cta-form textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .cta-form button {
-            padding: 16px 32px;
-            background: var(--gradient-1);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .cta-form button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--accent-glow);
-        }
-
-        /* Footer */
-        footer {
-            padding: 40px;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
-
-        footer a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            nav {
-                padding: 16px 20px;
-            }
-
-            .hero {
-                padding: 100px 20px 60px;
-            }
-
-            .section {
-                padding: 60px 20px;
-            }
-
-            .stats {
-                gap: 30px;
-            }
-
-            .cta-section {
-                padding: 60px 20px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Готов ли ваш бизнес к AI? — Квиз</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    min-height: 100vh;
+    color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .container {
+    max-width: 640px;
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 40px 32px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .header .icon { font-size: 48px; margin-bottom: 12px; }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #a78bfa, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .header p { color: #9ca3af; font-size: 15px; }
+  .progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #a78bfa, #60a5fa);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .question { display: none; animation: fadeIn 0.4s ease; }
+  .question.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .question-number {
+    font-size: 13px;
+    color: #a78bfa;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .question-text {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    line-height: 1.4;
+  }
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option {
+    background: rgba(255,255,255,0.06);
+    border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    user-select: none;
+  }
+  .option:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(167,139,250,0.4);
+    transform: translateX(4px);
+  }
+  .option.selected {
+    background: rgba(167,139,250,0.15);
+    border-color: #a78bfa;
+  }
+  .option .marker {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.2);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+  }
+  .option.selected .marker {
+    border-color: #a78bfa;
+    background: #a78bfa;
+  }
+  .option.selected .marker::after {
+    content: '✓';
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 28px;
+    gap: 12px;
+  }
+  .btn {
+    padding: 14px 28px;
+    border-radius: 12px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .btn-prev {
+    background: rgba(255,255,255,0.08);
+    color: #e0e0e0;
+  }
+  .btn-prev:hover { background: rgba(255,255,255,0.15); }
+  .btn-next {
+    background: linear-gradient(135deg, #a78bfa, #60a5fa);
+    color: #fff;
+    flex: 1;
+    max-width: 200px;
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(167,139,250,0.3); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+  .result { display: none; text-align: center; animation: fadeIn 0.5s ease; }
+  .result.active { display: block; }
+  .result .score-circle {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    font-weight: 800;
+    position: relative;
+  }
+  .result .score-circle::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    padding: 4px;
+    background: conic-gradient(var(--score-color) var(--score-pct), rgba(255,255,255,0.1) 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  .result h2 { font-size: 24px; margin-bottom: 12px; }
+  .result .level { font-size: 16px; color: #9ca3af; margin-bottom: 20px; }
+  .result .advice {
+    background: rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .result .advice strong { color: #a78bfa; }
+  .cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #a78bfa, #60a5fa);
+    color: #fff;
+    padding: 16px 36px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.25s ease;
+  }
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(167,139,250,0.3); }
+  .restart-btn {
+    display: inline-block;
+    margin-top: 16px;
+    color: #9ca3af;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+    background: none;
+    border: none;
+  }
+  @media (max-width: 480px) {
+    .container { padding: 28px 20px; }
+    .header h1 { font-size: 22px; }
+    .question-text { font-size: 17px; }
+  }
+</style>
 </head>
 <body>
+<div class="container">
+  <div class="header">
+    <div class="icon">🤖</div>
+    <h1>Готов ли ваш бизнес к AI?</h1>
+    <p>5 вопросов · 2 минуты · персональные рекомендации</p>
+  </div>
 
-    <nav>
-        <div class="logo">AI Audit</div>
-        <a href="#cta" class="nav-cta">Заказать аудит</a>
-    </nav>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
 
-    <section class="hero">
-        <div class="hero-content">
-            <div class="label">AI-аудит бизнеса</div>
-            <h1>Найдите <span class="gradient-text">точки роста</span>, которые упускаете</h1>
-            <p>Анализируем ваш бизнес с помощью ИИ и даём конкретные рекомендации: где теряете деньги, какие процессы автоматизировать первыми и как внедрить AI без рисков</p>
-            <div class="hero-buttons">
-                <a href="#cta" class="btn-primary">Получить бесплатный аудит</a>
-                <a href="#process" class="btn-secondary">Как это работает</a>
-            </div>
-        </div>
-    </section>
-
-    <div class="stats">
-        <div class="stat-item">
-            <div class="stat-number">150+</div>
-            <div class="stat-label">Проведено аудитов</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">3×</div>
-            <div class="stat-label">Рост конверсии в среднем</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">40 ч</div>
-            <div class="stat-label">Экономии в месяц на процессах</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">92%</div>
-            <div class="stat-label">Клиентов рекомендуют</div>
-        </div>
+  <div id="quiz">
+    <div class="question active" data-q="0">
+      <div class="question-number">Вопрос 1 из 5</div>
+      <div class="question-text">Есть ли у вас чёткие, повторяющиеся бизнес-процессы, которые отнимают больше 5 часов в неделю?</div>
+      <div class="options">
+        <div class="option" data-val="3"><div class="marker"></div>Да, и я могу их пошагово описать</div>
+        <div class="option" data-val="2"><div class="marker"></div>Есть повторяющиеся задачи, но процессы не формализованы</div>
+        <div class="option" data-val="1"><div class="marker"></div>Нет, всё уникальное — каждый раз по-новому</div>
+        <div class="option" data-val="0"><div class="marker"></div>Не знаю / не задумывался</div>
+      </div>
     </div>
 
-    <section class="section" id="problems">
-        <div class="section-header">
-            <h2>Знакомо?</h2>
-            <p>Типичные проблемы, которые решает AI-аудит</p>
-        </div>
-        <div class="cards-grid">
-            <div class="card">
-                <div class="card-icon">🔄</div>
-                <h3>Рутина съедает время</h3>
-                <p>Команда тратит 60% рабочего времени на повторяющиеся задачи, которые можно автоматизировать с помощью AI — от отчётов до ответов клиентам</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">📉</div>
-                <h3>Маркетинг без результата</h3>
-                <p>Бюджеты на рекламу растут, а отдача падаем. Неправильные каналы, слабые офферы и отсутствие системного подхода к аналитике</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">🤖</div>
-                <h3>Не знаете, с чего начать AI</h3>
-                <p>Слышали про ИИ, но не понимаете, какие инструменты подойдут именно вашему бизнесу. Боитесь потратить бюджет впустую</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">🔍</div>
-                <h3>Теряете клиентов</h3>
-                <p>Лиды приходят, но не конвертируются. Проблемы может быть в воронке, скриптах продаж, скорости ответа или позиционировании</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">💸</div>
-                <h3>Неясные процессы</h3>
-                <p>Каждый раз «изобретаете велосипед»: нет документации, SOP и прозрачной структуры. Масштабирование превращается в хаос</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">📊</div>
-                <h3>Решения на эмоциях</h3>
-                <p>Стратегия строится на интуиции, а не на данных. Нет чётких метрик и понимания, что работает, а что нет</p>
-            </div>
-        </div>
-    </section>
+    <div class="question" data-q="1">
+      <div class="question-number">Вопрос 2 из 5</div>
+      <div class="question-text">В каком формате хранится ваша ключевая бизнес-информация (клиенты, процессы, регламенты)?</div>
+      <div class="options">
+        <div class="option" data-val="3"><div class="marker"></div>Структурированно — CRM, базы данных, документация</div>
+        <div class="option" data-val="2"><div class="marker"></div>Частично оцифровано, но разрозненно (Excel, Google Docs, заметки)</div>
+        <div class="option" data-val="1"><div class="marker"></div>В основном в головах сотрудников и в переписках</div>
+        <div class="option" data-val="0"><div class="marker"></div>Хаос — каждый раз «изобретает велосипед»</div>
+      </div>
+    </div>
 
-    <section class="section" id="what-you-get">
-        <div class="section-header">
-            <h2>Что вы получите</h2>
-            <p>Конкретные результаты, от которых можно оттолкнуться</p>
-        </div>
-        <div class="cards-grid">
-            <div class="card">
-                <div class="card-icon">📋</div>
-                <h3>Карта AI-готовности</h3>
-                <p>Оценка зрелости вашего бизнеса по 5 направлениям: маркетинг, продажи, операции, поддержка, аналитика. Поймёте, на чём фокусироваться</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">⚡</div>
-                <h3>Quick Wins</h3>
-                <p>Список из 5–10 процессов, которые можно автоматизировать за 1–2 недели с минимальными вложениями. Быстрый результат уже сейчас</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">🗺</div>
-                <h3>Дорожная карта</h3>
-                <p>Пошаговый план внедрения AI на 3–6 месяцев с приоритетами, сроками и оценкой ROI каждого этапа</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">💰</div>
-                <h3>Расчёт экономии</h3>
-                <p>Конкретные цифры: сколько часов, денег и сотрудников вы сэкономите. Поймёте возврат инвестиций до старта</p>
-            </div>
-        </div>
-    </section>
+    <div class="question" data-q="2">
+      <div class="question-number">Вопрос 3 из 5</div>
+      <div class="question-text">Сколько часов в неделю ваша команда тратит на рутинные задачи (отчёты, ответы клиентам, публикация контента)?</div>
+      <div class="options">
+        <div class="option" data-val="0"><div class="marker"></div>Больше 20 часов — это основная часть работы</div>
+        <div class="option" data-val="1"><div class="marker"></div>10–20 часов — ощутимая нагрузка</div>
+        <div class="option" data-val="2"><div class="marker"></div>5–10 часов — терпимо, но хотелось бы меньше</div>
+        <div class="option" data-val="3"><div class="marker"></div>Меньше 5 часов — мы автоматизируем рутину</div>
+      </div>
+    </div>
 
-    <section class="section" id="process">
-        <div class="section-header">
-            <h2>Как проходит аудит</h2>
-            <p>4 шага к ясности и результату</p>
-        </div>
-        <div class="process-steps">
-            <div class="step">
-                <div class="step-marker">1</div>
-                <div class="step-line"></div>
-                <div class="step-content">
-                    <h3>Знакомство и бриф</h3>
-                    <p>30-минутный созвон: расскажете о бизнесе, текущих процессах и болях. Я задам точечные вопросы, чтобы погрузиться в контекст</p>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-marker">2</div>
-                <div class="step-line"></div>
-                <div class="step-content">
-                    <h3>Deep-анализ</h3>
-                    <p>Погружаюсь в ваш маркетинг, воронки, процессы и инструменты. Анализирую метрики, коммуникации, операционную модель</p>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-marker">3</div>
-                <div class="step-line"></div>
-                <div class="step-content">
-                    <h3>AI-моделирование</h3>
-                    <p>Прогоняю данные через AI-модели: нахожу паттерны, упущенные возможности и формирую приоритезированные рекомендации</p>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-marker">4</div>
-                <div class="step-content">
-                    <h3>Результат и план действий</h3>
-                    <p>Передаю детальный отчёт с картой готовности, quick wins и дорожной картой. Обсуждаем на финальном созвоне</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="question" data-q="3">
+      <div class="question-number">Вопрос 4 из 5</div>
+      <div class="question-text">Пробовали ли вы внедрять AI-инструменты в бизнес? Какой у вас опыт?</div>
+      <div class="options">
+        <div class="option" data-val="3"><div class="marker"></div>Да, уже используем и видим результат</div>
+        <div class="option" data-val="2"><div class="marker"></div>Пробовали, но не сложилось — не хватило экспертизы или времени</div>
+        <div class="option" data-val="1"><div class="marker"></div>Слышали, но не знаем с чего начать</div>
+        <div class="option" data-val="0"><div class="marker"></div>Нет, считаем что AI — это не про наш бизнес</div>
+      </div>
+    </div>
 
-    <section class="cta-section" id="cta">
-        <h2>Начните с бесплатной консультации</h2>
-        <p>Расскажите о бизнесе — поймём, чем могу быть полезен. Без обязательств и воды</p>
-        <form class="cta-form" onsubmit="handleSubmit(event)">
-            <input type="text" placeholder="Ваше имя" required>
-            <input type="email" placeholder="Email" required>
-            <input type="tel" placeholder="Телефон (необязательно)">
-            <textarea placeholder="Коротко о вашем бизнесе и задаче..." required></textarea>
-            <button type="submit">Отправить заявку</button>
-        </form>
-    </section>
+    <div class="question" data-q="4">
+      <div class="question-number">Вопрос 5 из 5</div>
+      <div class="question-text">Как вы оцениваете свою готовность инвестировать время/деньги в автоматизацию прямо сейчас?</div>
+      <div class="options">
+        <div class="option" data-val="3"><div class="marker"></div>Готовы — есть бюджет и понимание зачем</div>
+        <div class="option" data-val="2"><div class="marker"></div>Интересно, но нужны доказательства ROI</div>
+        <div class="option" data-val="1"><div class="marker"></div>Думаем об этом, но пока не приоритет</div>
+        <div class="option" data-val="0"><div class="marker"></div>Не видим смысла / нет ресурсов</div>
+      </div>
+    </div>
 
-    <footer>
-        <p>© 2026 AI Audit · <a href="#">Политика конфиденциальности</a></p>
-        <p style="margin-top: 8px;">Разработано с 🦉 <a href="#">@papaleshapro</a></p>
-    </footer>
+    <div class="nav-buttons">
+      <button class="btn btn-prev" id="prevBtn" disabled>← Назад</button>
+      <button class="btn btn-next" id="nextBtn">Далее →</button>
+    </div>
+  </div>
 
-    <script>
-        function handleSubmit(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.textContent = '✅ Отправлено!';
-            btn.style.background = '#00b894';
-            setTimeout(() => {
-                btn.textContent = 'Отправить заявку';
-                btn.style.background = '';
-                e.target.reset();
-            }, 3000);
-        }
+  <div class="result" id="result">
+    <div class="score-circle" id="scoreCircle">0</div>
+    <h2 id="resultTitle"></h2>
+    <div class="level" id="resultLevel"></div>
+    <div class="advice" id="resultAdvice"></div>
+    <a class="cta-btn" id="ctaBtn" href="#">Получить бесплатный AI-аудит →</a>
+    <br>
+    <button class="restart-btn" id="restartBtn">Пройти заново</button>
+  </div>
+</div>
 
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-    </script>
+<script>
+const questions = document.querySelectorAll('.question');
+const options = document.querySelectorAll('.option');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const progressFill = document.getElementById('progressFill');
+const quizEl = document.getElementById('quiz');
+const resultEl = document.getElementById('result');
+const scoreCircle = document.getElementById('scoreCircle');
+const resultTitle = document.getElementById('resultTitle');
+const resultLevel = document.getElementById('resultLevel');
+const resultAdvice = document.getElementById('resultAdvice');
+const ctaBtn = document.getElementById('ctaBtn');
+const restartBtn = document.getElementById('restartBtn');
 
+let current = 0;
+let answers = new Array(5).fill(null);
+
+function updateUI() {
+  questions.forEach((q, i) => q.classList.toggle('active', i === current));
+  prevBtn.disabled = current === 0;
+  nextBtn.textContent = current === 4 ? 'Показать результат →' : 'Далее →';
+  progressFill.style.width = ((current) / 5 * 100) + '%';
+}
+
+options.forEach(opt => {
+  opt.addEventListener('click', () => {
+    const qIndex = parseInt(opt.closest('.question').dataset.q);
+    answers[qIndex] = parseInt(opt.dataset.val);
+    opt.closest('.question').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+  });
+});
+
+prevBtn.addEventListener('click', () => { if (current > 0) { current--; updateUI(); } });
+
+nextBtn.addEventListener('click', () => {
+  if (current < 4) { current++; updateUI(); }
+  else showResult();
+});
+
+function showResult() {
+  const total = answers.reduce((a, b) => a + b, 0);
+  const max = 15;
+  const pct = Math.round(total / max * 100);
+
+  let color, title, level, advice;
+  if (total >= 12) {
+    color = '#34d399';
+    title = '🚀 Вы готовы к AI!';
+    level = `Набрано ${total} из ${15} — высокая готовность`;
+    advice = 'У вас формализованные процессы и есть опыт работы с AI. Вы на один шаг от того, чтобы <strong>масштабировать автоматизацию</strong> и получить серьёзное конкурентное преимущество. Рекомендуем сфокусироваться на внедрении AI-агентов для рутинных задач и аналитики.';
+  } else if (total >= 8) {
+    color = '#60a5fa';
+    title = '⚡ Хороший фундамент';
+    level = `Набрано ${total} из ${15} — средняя готовность`;
+    advice = 'У вас есть база, но есть пробелы. <strong>Главный фокус</strong> — формализовать процессы и структурировать данные. Без этого AI-инструменты не дадут максимального эффекта. Начните с аудита — он покажет, где автоматизация даст наибольший возврат.';
+  } else if (total >= 4) {
+    color = '#fbbf24';
+    title = '🔧 Нужна подготовка';
+    level = `Набрано ${total} из ${15} — низкая готовность`;
+    advice = 'Прежде чем внедрять AI, стоит <strong>навести порядок в процессах</strong>. Опишите повторяющиеся задачи, оцифруйте данные, разберитесь с рутиной. Это не сложно — но без этого любой AI-инструмент будет как «швейцарский нож в руках младенца».';
+  } else {
+    color = '#f87171';
+    title = '🌱 Ранняя стадия';
+    level = `Набрано ${total} из ${15} — начальный уровень`;
+    advice = 'Вы в самом начале пути — и это нормально. <strong>Главный шаг</strong> — начать замечать рутину и фиксировать процессы. Даже простая автоматизация (шаблоны ответов, планировщик постов) может сэкономить часы в неделю. Начните с малого.';
+  }
+
+  quizEl.style.display = 'none';
+  resultEl.classList.add('active');
+  scoreCircle.textContent = pct + '%';
+  scoreCircle.style.setProperty('--score-color', color);
+  scoreCircle.style.setProperty('--score-pct', pct + '%');
+  scoreCircle.style.color = color;
+  resultTitle.textContent = title;
+  resultLevel.textContent = level;
+  resultAdvice.innerHTML = advice;
+}
+
+restartBtn.addEventListener('click', () => {
+  current = 0;
+  answers = new Array(5).fill(null);
+  options.forEach(o => o.classList.remove('selected'));
+  resultEl.classList.remove('active');
+  quizEl.style.display = 'block';
+  updateUI();
+});
+
+updateUI();
+</script>
 </body>
 </html>
