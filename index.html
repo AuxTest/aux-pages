@@ -8,11 +8,59 @@
   /* ===== RESET & BASE ===== */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
+
+  /* ===== THEME VARIABLES ===== */
+  :root {
+    --bg-body: #ffffff;
+    --bg-section-white: #ffffff;
+    --bg-section-accent: #f8fafc;
+    --bg-card: #ffffff;
+    --text-primary: #1a1a2e;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border-color: #e2e8f0;
+    --border-light: #f1f5f9;
+    --card-shadow: rgba(37,99,235,0.08);
+    --nav-bg: rgba(255,255,255,0.92);
+    --nav-border: rgba(0,0,0,0.06);
+    --testimonial-quote: #e2e8f0;
+    --timer-text: #854d0e;
+    --timer-bg: linear-gradient(135deg, #fef9c3, #fef08a);
+    --version-bg: rgba(59,130,246,0.08);
+    --version-border: rgba(59,130,246,0.15);
+    --hero-gradient: linear-gradient(165deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    --footer-bg: #0c0f1a;
+  }
+
+  [data-theme="dark"] {
+    --bg-body: #0a0f1a;
+    --bg-section-white: #0f172a;
+    --bg-section-accent: #1a1f2e;
+    --bg-card: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --text-light: #64748b;
+    --border-color: #334155;
+    --border-light: #1e293b;
+    --card-shadow: rgba(99,102,241,0.08);
+    --nav-bg: rgba(10,15,26,0.95);
+    --nav-border: rgba(255,255,255,0.06);
+    --testimonial-quote: #334155;
+    --timer-text: #fbbf24;
+    --timer-bg: linear-gradient(135deg, #1e3a5f, #152940);
+    --version-bg: rgba(59,130,246,0.12);
+    --version-border: rgba(59,130,246,0.2);
+    --hero-gradient: linear-gradient(165deg, #070a14 0%, #0f172a 50%, #070a14 100%);
+    --footer-bg: #070a12;
+  }
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    color: #1a1a2e;
+    color: var(--text-primary);
     line-height: 1.6;
-    background: #fff;
+    background: var(--bg-body);
     overflow-x: hidden;
   }
   img { max-width: 100%; display: block; }
@@ -22,8 +70,8 @@
   .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
   .section { padding: 80px 0; }
   .section-dark { background: #0f1923; color: #fff; }
-  .section-accent { background: #f8fafc; }
-  .section-white { background: #fff; }
+  .section-accent { background: var(--bg-section-accent); }
+  .section-white { background: var(--bg-section-white); }
   .label-tag {
     display: inline-block;
     background: rgba(59, 130, 246, 0.12);
@@ -92,10 +140,10 @@
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    background: rgba(255,255,255,0.92);
+    background: var(--nav-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(0,0,0,0.06);
+    border-bottom: 1px solid var(--nav-border);
     padding: 0 24px;
     height: 64px;
     display: flex;
@@ -105,11 +153,11 @@
   .nav-logo {
     font-weight: 800;
     font-size: 1.1rem;
-    color: #1a1a2e;
+    color: var(--text-primary);
   }
   .nav-logo span { color: #2563eb; }
   .nav-links { display: flex; gap: 28px; font-size: 0.9rem; font-weight: 500; }
-  .nav-links a { color: #475569; transition: color 0.2s; }
+  .nav-links a { color: var(--text-secondary); transition: color 0.2s; }
   .nav-links a:hover { color: #2563eb; }
   .nav-cta {
     background: #2563eb;
@@ -122,7 +170,7 @@
   }
   .nav-cta:hover { background: #1d4ed8; color: #fff; }
   .nav-mobile-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
-  .nav-mobile-toggle span { width: 24px; height: 2px; background: #1a1a2e; border-radius: 2px; transition: 0.2s; }
+  .nav-mobile-toggle span { width: 24px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: 0.2s; }
 
   @media (max-width: 768px) {
     .nav-links { display: none; }
@@ -133,7 +181,7 @@
   /* ===== HERO ===== */
   .hero {
     padding: 140px 0 80px;
-    background: linear-gradient(165deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    background: var(--hero-gradient);
     color: #fff;
     position: relative;
     overflow: hidden;
@@ -278,25 +326,25 @@
     gap: 20px;
   }
   .ba-card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 28px;
     transition: all 0.3s ease;
   }
-  .ba-card:hover { border-color: #2563eb; box-shadow: 0 8px 30px rgba(37,99,235,0.08); }
+  .ba-card:hover { border-color: #2563eb; box-shadow: 0 8px 30px var(--card-shadow); }
   .ba-card-title {
     font-weight: 700;
     font-size: 1rem;
     margin-bottom: 16px;
-    color: #1a1a2e;
+    color: var(--text-primary);
   }
   .ba-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--border-light);
     font-size: 0.92rem;
     gap: 12px;
   }
@@ -357,8 +405,8 @@
     gap: 24px;
   }
   .role-card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 28px;
     transition: all 0.3s;
@@ -372,7 +420,7 @@
     height: 3px;
     background: linear-gradient(90deg, #2563eb, #a78bfa);
   }
-  .role-card:hover { border-color: #2563eb; box-shadow: 0 8px 30px rgba(37,99,235,0.08); }
+  .role-card:hover { border-color: #2563eb; box-shadow: 0 8px 30px var(--card-shadow); }
   .role-icon { font-size: 1.5rem; margin-bottom: 12px; }
   .role-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
   .role-org { font-size: 0.82rem; color: #64748b; margin-bottom: 14px; }
@@ -385,8 +433,8 @@
     margin: 0 auto;
   }
   .program-block {
-    background: #fff;
-    border: 1px solid #e2e8f0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     margin-bottom: 16px;
     overflow: hidden;
@@ -465,8 +513,8 @@
     gap: 24px;
   }
   .testimonial-card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 28px;
     position: relative;
@@ -476,14 +524,14 @@
     position: absolute;
     top: 12px; right: 24px;
     font-size: 4rem;
-    color: #e2e8f0;
+    color: var(--testimonial-quote);
     font-weight: 900;
     line-height: 1;
     font-family: Georgia, serif;
   }
   .testimonial-text {
     font-size: 0.95rem;
-    color: #334155;
+    color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 16px;
     font-style: italic;
@@ -503,14 +551,14 @@
   /* ===== PRICING ===== */
   .pricing-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 24px;
-    max-width: 700px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 960px;
     margin: 0 auto;
   }
   .pricing-card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 20px;
     padding: 36px 28px;
     position: relative;
@@ -534,20 +582,20 @@
     white-space: nowrap;
   }
   .pricing-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
-  .pricing-desc { font-size: 0.88rem; color: #64748b; margin-bottom: 20px; }
+  .pricing-desc { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; }
   .pricing-price { margin-bottom: 20px; }
   .pricing-old {
     font-size: 1.2rem;
-    color: #94a3b8;
+    color: var(--text-light);
     text-decoration: line-through;
     margin-right: 12px;
   }
   .pricing-new {
     font-size: 2.6rem;
     font-weight: 900;
-    color: #1a1a2e;
+    color: var(--text-primary);
   }
-  .pricing-new small { font-size: 1rem; font-weight: 600; color: #64748b; }
+  .pricing-new small { font-size: 1rem; font-weight: 600; color: var(--text-light); }
   .pricing-save {
     display: inline-block;
     background: #dcfce7;
@@ -562,11 +610,11 @@
   .pricing-features li {
     padding: 8px 0;
     font-size: 0.9rem;
-    color: #475569;
+    color: var(--text-secondary);
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--border-light);
   }
   .pricing-features li:last-child { border-bottom: none; }
   .pricing-features li::before {
@@ -575,8 +623,8 @@
     font-weight: 700;
     flex-shrink: 0;
   }
-  .pricing-features li.na { color: #94a3b8; }
-  .pricing-features li.na::before { content: '—'; color: #cbd5e1; }
+  .pricing-features li.na { color: var(--text-muted); }
+  .pricing-features li.na::before { content: '—'; color: var(--text-light); }
 
   .pricing-cta {
     width: 100%;
@@ -585,8 +633,8 @@
 
   /* ===== TIMER ===== */
   .timer-bar {
-    background: linear-gradient(135deg, #fef9c3, #fef08a);
-    color: #854d0e;
+    background: var(--timer-bg);
+    color: var(--timer-text);
     padding: 16px 24px;
     border-radius: 16px;
     text-align: center;
@@ -602,13 +650,13 @@
     font-size: 1.4rem;
     font-weight: 800;
     font-variant-numeric: tabular-nums;
-    color: #1a1a2e;
+    color: var(--text-primary);
   }
 
   /* ===== FAQ ===== */
   .faq-list { max-width: 720px; margin: 0 auto; }
   .faq-item {
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color);
     padding: 20px 0;
   }
   .faq-question {
@@ -619,13 +667,13 @@
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-    color: #1a1a2e;
+    color: var(--text-primary);
     user-select: none;
   }
   .faq-question::after {
     content: '+';
     font-size: 1.4rem;
-    color: #94a3b8;
+    color: var(--text-light);
     transition: transform 0.3s;
     flex-shrink: 0;
   }
@@ -634,7 +682,7 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease, padding 0.3s ease;
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 0.92rem;
     line-height: 1.6;
   }
@@ -645,13 +693,13 @@
 
   /* ===== FINAL CTA ===== */
   .final-cta {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    background: var(--hero-gradient);
     color: #fff;
     text-align: center;
     padding: 100px 0;
   }
   .final-cta h2 { margin-bottom: 16px; }
-  .final-cta p { color: #94a3b8; max-width: 540px; margin: 0 auto 36px; font-size: 1.05rem; }
+  .final-cta p { color: var(--text-light); max-width: 540px; margin: 0 auto 36px; font-size: 1.05rem; }
   .final-metrics {
     display: flex;
     justify-content: center;
@@ -661,18 +709,18 @@
   }
   .final-metric { text-align: center; }
   .final-metric-value { font-size: 1.6rem; font-weight: 800; color: #60a5fa; }
-  .final-metric-label { font-size: 0.82rem; color: #64748b; margin-top: 4px; }
+  .final-metric-label { font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; }
 
   /* ===== FOOTER ===== */
   footer {
-    background: #0c0f1a;
-    color: #64748b;
+    background: var(--footer-bg);
+    color: var(--text-muted);
     text-align: center;
     padding: 40px 24px;
     font-size: 0.85rem;
     border-top: 1px solid rgba(255,255,255,0.04);
   }
-  footer a { color: #94a3b8; }
+  footer a { color: var(--text-light); }
   footer a:hover { color: #60a5fa; }
 
   /* ===== ANIMATIONS ===== */
@@ -684,8 +732,8 @@
 
   /* ===== VERSION INFO ===== */
   .version-info {
-    background: rgba(59,130,246,0.08);
-    border: 1px solid rgba(59,130,246,0.15);
+    background: var(--version-bg);
+    border: 1px solid var(--version-border);
     border-radius: 12px;
     padding: 18px 24px;
     display: flex;
@@ -696,7 +744,7 @@
     margin-top: 24px;
     flex-wrap: wrap;
   }
-  .version-info span { color: #94a3b8; }
+  .version-info span { color: var(--text-light); }
   .version-tag {
     display: inline-block;
     background: rgba(255,255,255,0.08);
@@ -704,6 +752,36 @@
     border-radius: 6px;
     font-weight: 600;
     font-size: 0.82rem;
+  }
+
+  /* ===== THEME TOGGLE ===== */
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+    background: var(--version-bg);
+  }
+  .theme-toggle svg { display: block; }
+  .theme-icon-sun { display: block; }
+  .theme-icon-moon { display: none; }
+  [data-theme="dark"] .theme-icon-sun { display: none; }
+  [data-theme="dark"] .theme-icon-moon { display: block; }
+
+  @media (max-width: 768px) {
+    .theme-toggle { margin-top: 8px; }
   }
 </style>
 </head>
@@ -719,6 +797,10 @@
     <a href="#pricing">Цена</a>
     <a href="#faq">FAQ</a>
   </div>
+  <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+    <svg class="theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    <svg class="theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
   <a href="#pricing" class="nav-cta">Записаться</a>
   <button class="nav-mobile-toggle" aria-label="Меню">
     <span></span><span></span><span></span>
@@ -1067,6 +1149,16 @@
         <h4>Обновления навсегда</h4>
         <p>Курс живёт и обновляется. Новые модули, фишки, инструменты — бесплатно. Доступ навсегда.</p>
       </div>
+      <div class="why-card">
+        <div class="why-icon">📝</div>
+        <h4>47 готовых промптов под dental</h4>
+        <p>Ничего не нужно придумывать. Открываешь библиотеку промптов — выбираешь задачу (анализ конкурентов, контент-план, дашборд CEO) и запускаешь. Всё на русском, под стоматологию.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💬</div>
+        <h4>Комьюнити и разборы кейсов</h4>
+        <p>Закрытый чат выпускников, где разбираем реальные ситуации из клиник. Прислал проблему — получил готовый промпт или решение от автора и коллег.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -1315,6 +1407,25 @@
         </ul>
         <a href="#" class="btn btn-primary pricing-cta">Выбрать PRO</a>
       </div>
+
+      <div class="pricing-card">
+        <div class="pricing-name">👑 Командный</div>
+        <div class="pricing-desc">Курс на команду до 3 человек + созвоны</div>
+        <div class="pricing-price">
+          <span class="pricing-old">39 990 ₽</span>
+          <span class="pricing-new">24 990 <small>₽</small></span>
+          <span class="pricing-save">−38%</span>
+        </div>
+        <ul class="pricing-features">
+          <li>Всё из PRO</li>
+          <li>До 3 участников от одной клиники</li>
+          <li>4 ежемесячных созвона (разбор кейсов)</li>
+          <li>Чат с автором для всей команды</li>
+          <li>Общие шаблоны и навыки под сеть</li>
+          <li>Приоритетная поддержка с ответом &lt; 2ч</li>
+        </ul>
+        <a href="#" class="btn btn-primary pricing-cta">Выбрать Командный</a>
+      </div>
     </div>
   </div>
 </section>
@@ -1395,9 +1506,6 @@
     <p style="margin-top:8px;">
       По всем вопросам: 
       <a href="https://t.me/papaleshapro" target="_blank">@papaleshapro</a>
-      · Смежные курсы: 
-      <a href="https://odud.marketing" target="_blank">MarketingOdud</a> · 
-      <a href="https://odud.pro" target="_blank">ProductOdud</a>
     </p>
   </div>
 </footer>
@@ -1446,6 +1554,27 @@
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
+  });
+
+  // ===== THEME TOGGLE =====
+  const toggle = document.getElementById('themeToggle');
+  const html = document.documentElement;
+
+  // Load saved theme
+  if (localStorage.getItem('theme') === 'dark') {
+    html.setAttribute('data-theme', 'dark');
+  } else {
+    html.removeAttribute('data-theme');
+  }
+
+  toggle.addEventListener('click', () => {
+    if (html.hasAttribute('data-theme')) {
+      html.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'light');
+    } else {
+      html.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    }
   });
 </script>
 </body>
