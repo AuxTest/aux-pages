@@ -3,383 +3,1006 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Готов ли ваш бизнес к AI? — Квиз</title>
+<title>DentOdud — Claude Code для маркетолога стоматологии</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --bg: #faf7f4;
+    --bg-dark: #1a1a1a;
+    --text: #1a1a1a;
+    --text-light: #6b6b6b;
+    --accent: #c73b2a;
+    --accent-hover: #a83224;
+    --border: #e5e0db;
+    --card-bg: #ffffff;
+    --code-bg: #2d2d2d;
+    --section-gap: 120px;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-    min-height: 100vh;
-    color: #e0e0e0;
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Navigation */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 64px;
+    background: rgba(250, 247, 244, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .container {
-    max-width: 640px;
-    width: 100%;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(20px);
-    border-radius: 24px;
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 40px 32px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-  }
-  .header {
-    text-align: center;
-    margin-bottom: 32px;
-  }
-  .header .icon { font-size: 48px; margin-bottom: 12px; }
-  .header h1 {
-    font-size: 26px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #a78bfa, #60a5fa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 8px;
-  }
-  .header p { color: #9ca3af; font-size: 15px; }
-  .progress-bar {
-    width: 100%;
-    height: 6px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 3px;
-    margin-bottom: 28px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #a78bfa, #60a5fa);
-    border-radius: 3px;
-    transition: width 0.4s ease;
-  }
-  .question { display: none; animation: fadeIn 0.4s ease; }
-  .question.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-  .question-number {
-    font-size: 13px;
-    color: #a78bfa;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-  }
-  .question-text {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    line-height: 1.4;
-  }
-  .options { display: flex; flex-direction: column; gap: 12px; }
-  .option {
-    background: rgba(255,255,255,0.06);
-    border: 2px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    padding: 16px 20px;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    user-select: none;
-  }
-  .option:hover {
-    background: rgba(255,255,255,0.12);
-    border-color: rgba(167,139,250,0.4);
-    transform: translateX(4px);
-  }
-  .option.selected {
-    background: rgba(167,139,250,0.15);
-    border-color: #a78bfa;
-  }
-  .option .marker {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.2);
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.25s ease;
-  }
-  .option.selected .marker {
-    border-color: #a78bfa;
-    background: #a78bfa;
-  }
-  .option.selected .marker::after {
-    content: '✓';
-    color: #fff;
-    font-size: 13px;
-    font-weight: 700;
-  }
-  .nav-buttons {
-    display: flex;
     justify-content: space-between;
-    margin-top: 28px;
-    gap: 12px;
+    padding: 0 40px;
+    z-index: 100;
+  }
+  .nav-logo {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    background: var(--accent);
+    color: #fff !important;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--accent-hover) !important; }
+
+  /* Sections */
+  section { padding: 80px 40px; }
+  .section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-title {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .section-subtitle {
+    font-size: 18px;
+    color: var(--text-light);
+    max-width: 640px;
+    margin-bottom: 48px;
+  }
+  .section-dark {
+    background: var(--bg-dark);
+    color: #fff;
+  }
+  .section-dark .section-subtitle { color: #999; }
+  .section-dark .section-title { color: #fff; }
+
+  /* Hero */
+  .hero {
+    padding: 140px 40px 80px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+  .hero .section-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero h1 {
+    font-size: 56px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .hero h1 .outline {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--text);
+    text-stroke: 2px var(--text);
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero p {
+    font-size: 18px;
+    color: var(--text-light);
+    margin: 24px 0 32px;
+    max-width: 520px;
+  }
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
   }
   .btn {
-    padding: 14px 28px;
-    border-radius: 12px;
-    border: none;
-    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    border-radius: 10px;
+    font-size: 16px;
     font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
     cursor: pointer;
-    transition: all 0.25s ease;
+    border: none;
   }
-  .btn-prev {
-    background: rgba(255,255,255,0.08);
-    color: #e0e0e0;
-  }
-  .btn-prev:hover { background: rgba(255,255,255,0.15); }
-  .btn-next {
-    background: linear-gradient(135deg, #a78bfa, #60a5fa);
+  .btn-primary {
+    background: var(--accent);
     color: #fff;
-    flex: 1;
-    max-width: 200px;
   }
-  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(167,139,250,0.3); }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
-  .result { display: none; text-align: center; animation: fadeIn 0.5s ease; }
-  .result.active { display: block; }
-  .result .score-circle {
-    width: 140px; height: 140px;
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1.5px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--text); }
+  .btn-light {
+    background: #fff;
+    color: var(--text);
+  }
+  .btn-light:hover { background: #f0f0f0; }
+
+  /* Terminal mockup */
+  .terminal {
+    background: var(--code-bg);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .terminal-header {
+    background: #1a1a1a;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #333;
+  }
+  .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .terminal-dot.red { background: #ff5f56; }
+  .terminal-dot.yellow { background: #ffbd2e; }
+  .terminal-dot.green { background: #27c93f; }
+  .terminal-title { color: #888; font-size: 12px; margin-left: 8px; }
+  .terminal-body { padding: 20px 24px; color: #ccc; }
+  .terminal-body .prompt { color: #27c93f; }
+  .terminal-body .cmd { color: #fff; }
+  .terminal-body .output { color: #999; }
+  .terminal-body .highlight { color: #ffbd2e; }
+  .terminal-body .comment { color: #6a9955; }
+
+  /* Metrics bar */
+  .metrics-bar {
+    background: #fff;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 40px;
+  }
+  .metrics-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    text-align: center;
+  }
+  .metric-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .metric-label {
+    font-size: 14px;
+    color: var(--text-light);
+  }
+
+  /* Features / 3-column */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-top: 48px;
+  }
+  .feature-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    transition: transform 0.2s;
+  }
+  .feature-card:hover { transform: translateY(-2px); }
+  .feature-icon { font-size: 28px; margin-bottom: 16px; }
+  .feature-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .feature-card p {
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+
+  /* Speed comparison table */
+  .speed-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin-top: 24px;
+  }
+  .speed-table th {
+    text-align: left;
+    padding: 16px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-light);
+    border-bottom: 1px solid var(--border);
+  }
+  .speed-table td {
+    padding: 16px 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    font-size: 15px;
+  }
+  .speed-table td:first-child { border-radius: 10px 0 0 10px; font-weight: 600; }
+  .speed-table td:last-child { border-radius: 0 10px 10px 0; }
+  .speed-table .before { color: var(--text-light); text-decoration: line-through; }
+  .speed-table .after { color: var(--accent); font-weight: 700; }
+
+  /* Pain points */
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .pain-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 24px;
+    font-size: 15px;
+    transition: background 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .pain-item:hover { background: rgba(255,255,255,0.08); }
+  .pain-icon { font-size: 20px; flex-shrink: 0; }
+
+  /* Skills list */
+  .skills-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 15px;
+  }
+  .skill-check { color: var(--accent); font-weight: 700; font-size: 18px; }
+
+  /* Program accordion */
+  .program-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .program-block {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--card-bg);
+  }
+  .program-header {
+    padding: 20px 24px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .program-header:hover { background: #f8f5f2; }
+  .program-header .arrow {
+    transition: transform 0.3s;
+    font-size: 14px;
+    color: var(--text-light);
+  }
+  .program-header.open .arrow { transform: rotate(180deg); }
+  .program-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .program-content-inner {
+    padding: 0 24px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .program-content-inner ul {
+    list-style: none;
+    padding-top: 12px;
+  }
+  .program-content-inner li {
+    padding: 6px 0;
+    font-size: 14px;
+    color: var(--text-light);
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+  .program-content-inner li::before {
+    content: "→";
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .program-block .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-left: 8px;
+  }
+
+  .section-dark .program-block { background: #2a2a2a; border-color: #333; }
+  .section-dark .program-header:hover { background: #333; }
+  .section-dark .program-content-inner { border-color: #333; }
+  .section-dark .program-content-inner li { color: #999; }
+
+  /* Testimonials */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .testimonial-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+  }
+  .testimonial-card p {
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .testimonial-avatar {
+    width: 44px; height: 44px;
     border-radius: 50%;
-    margin: 0 auto 24px;
+    background: var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 42px;
-    font-weight: 800;
-    position: relative;
-  }
-  .result .score-circle::before {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    padding: 4px;
-    background: conic-gradient(var(--score-color) var(--score-pct), rgba(255,255,255,0.1) 0);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-  .result h2 { font-size: 24px; margin-bottom: 12px; }
-  .result .level { font-size: 16px; color: #9ca3af; margin-bottom: 20px; }
-  .result .advice {
-    background: rgba(255,255,255,0.06);
-    border-radius: 14px;
-    padding: 20px;
-    text-align: left;
-    font-size: 15px;
-    line-height: 1.6;
-    margin-bottom: 24px;
-  }
-  .result .advice strong { color: #a78bfa; }
-  .cta-btn {
-    display: inline-block;
-    background: linear-gradient(135deg, #a78bfa, #60a5fa);
-    color: #fff;
-    padding: 16px 36px;
-    border-radius: 14px;
-    text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 16px;
-    transition: all 0.25s ease;
+    color: var(--text-light);
   }
-  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(167,139,250,0.3); }
-  .restart-btn {
-    display: inline-block;
-    margin-top: 16px;
-    color: #9ca3af;
+  .testimonial-name { font-weight: 600; font-size: 14px; }
+  .testimonial-role { font-size: 13px; color: var(--text-light); }
+
+  /* Requirements */
+  .req-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .req-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
     font-size: 14px;
-    cursor: pointer;
-    text-decoration: underline;
-    background: none;
-    border: none;
   }
-  @media (max-width: 480px) {
-    .container { padding: 28px 20px; }
-    .header h1 { font-size: 22px; }
-    .question-text { font-size: 17px; }
+  .req-icon { font-size: 18px; }
+
+  /* Pricing */
+  .pricing-card {
+    text-align: center;
+    padding: 48px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .pricing-old {
+    font-size: 20px;
+    color: var(--text-light);
+    text-decoration: line-through;
+    margin-bottom: 4px;
+  }
+  .pricing-current {
+    font-size: 56px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .pricing-note {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 32px;
+  }
+  .pricing-features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 32px;
+  }
+  .pricing-features li {
+    padding: 8px 0;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pricing-features li::before {
+    content: "✓";
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Author */
+  .author-section {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 40px;
+    align-items: start;
+    margin-top: 32px;
+  }
+  .author-avatar-lg {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--text-light);
+    flex-shrink: 0;
+  }
+  .author-info h3 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .author-info p {
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  /* Footer */
+  footer {
+    padding: 32px 40px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+  footer a { color: var(--text); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  /* Mobile responsive */
+  @media (max-width: 900px) {
+    .hero .section-inner { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 36px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .pain-grid { grid-template-columns: 1fr; }
+    .skills-list { grid-template-columns: 1fr; }
+    .req-grid { grid-template-columns: 1fr; }
+    .author-section { grid-template-columns: 1fr; text-align: center; }
+    .nav-links { display: none; }
+    section { padding: 60px 24px; }
+    .hero { padding: 120px 24px 60px; }
+    .nav-cta { display: none; }
+    .section-title { font-size: 28px; }
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-light);
+    font-size: 12px;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
   }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <div class="icon">🤖</div>
-    <h1>Готов ли ваш бизнес к AI?</h1>
-    <p>5 вопросов · 2 минуты · персональные рекомендации</p>
-  </div>
 
-  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+<!-- Navigation -->
+<nav>
+  <a href="#" class="nav-logo">Dent<span>Odud</span></a>
+  <ul class="nav-links">
+    <li><a href="#program">Программа</a></li>
+    <li><a href="#price">Стоимость</a></li>
+    <li><a href="#requirements">Требования</a></li>
+    <li><a href="#about">Об авторе</a></li>
+    <li><a class="nav-cta" href="#price">Купить курс</a></li>
+  </ul>
+</nav>
 
-  <div id="quiz">
-    <div class="question active" data-q="0">
-      <div class="question-number">Вопрос 1 из 5</div>
-      <div class="question-text">Есть ли у вас чёткие, повторяющиеся бизнес-процессы, которые отнимают больше 5 часов в неделю?</div>
-      <div class="options">
-        <div class="option" data-val="3"><div class="marker"></div>Да, и я могу их пошагово описать</div>
-        <div class="option" data-val="2"><div class="marker"></div>Есть повторяющиеся задачи, но процессы не формализованы</div>
-        <div class="option" data-val="1"><div class="marker"></div>Нет, всё уникальное — каждый раз по-новому</div>
-        <div class="option" data-val="0"><div class="marker"></div>Не знаю / не задумывался</div>
+<!-- Hero -->
+<section class="hero" id="top">
+  <div class="section-inner">
+    <div>
+      <h1>
+        Claude Code<br>
+        <span class="outline">для маркетолога</span><br>
+        <span class="accent">стоматологии</span>
+      </h1>
+      <p>
+        Практический курс-симулятор. Ты — маркетолог в сети клиник «DentaPro». 
+        Запускаешь AI-агентов для контента, аналитики, воронки продаж и репутации. 
+        Без лекций. Без слайдов. Только работа в Claude Code.
+      </p>
+      <div class="hero-buttons">
+        <a href="#price" class="btn btn-primary">🔥 Купить за 7 990 ₽ — Early Bird</a>
+        <a href="#program" class="btn btn-outline">Программа курса →</a>
       </div>
     </div>
-
-    <div class="question" data-q="1">
-      <div class="question-number">Вопрос 2 из 5</div>
-      <div class="question-text">В каком формате хранится ваша ключевая бизнес-информация (клиенты, процессы, регламенты)?</div>
-      <div class="options">
-        <div class="option" data-val="3"><div class="marker"></div>Структурированно — CRM, базы данных, документация</div>
-        <div class="option" data-val="2"><div class="marker"></div>Частично оцифровано, но разрозненно (Excel, Google Docs, заметки)</div>
-        <div class="option" data-val="1"><div class="marker"></div>В основном в головах сотрудников и в переписках</div>
-        <div class="option" data-val="0"><div class="marker"></div>Хаос — каждый раз «изобретает велосипед»</div>
+    <div>
+      <div class="terminal">
+        <div class="terminal-header">
+          <span class="terminal-dot red"></span>
+          <span class="terminal-dot yellow"></span>
+          <span class="terminal-dot green"></span>
+          <span class="terminal-title">~/dentapro — Claude Code</span>
+        </div>
+        <div class="terminal-body">
+          <div><span class="prompt">dentapro@pm:$</span> <span class="cmd">ls agents/</span></div>
+          <div><span class="output">аналитик-отзывов&nbsp;&nbsp;копирайтер</span></div>
+          <div><span class="output">SMM-стратег&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;воронка-записи</span></div>
+          <div><span class="output">конкурент-разведка&nbsp;&nbsp;SEO-клиники</span></div>
+          <div>&nbsp;</div>
+          <div><span class="prompt">dentapro@pm:$</span> <span class="cmd">./agents/аналитик-отзывов "последние 50 отзывов"</span></div>
+          <div><span class="highlight">→ Анализирую тональность, темы, повторяющиеся жалобы...</span></div>
+          <div><span class="output">✓ Отчёт готов: 4.8★ → 4.9★</span></div>
+          <div><span class="output">  Главная проблема: «долго жду приёма»</span></div>
+          <div><span class="output">  Рекомендация: напоминание за 24ч + SMS</span></div>
+          <div>&nbsp;</div>
+          <div><span class="prompt">dentapro@pm:$</span> <span class="cmd">./agents/контент-план —week 24</span></div>
+          <div><span class="comment"># Готово: 7 постов для Instagram + Telegram</span></div>
+        </div>
       </div>
-    </div>
-
-    <div class="question" data-q="2">
-      <div class="question-number">Вопрос 3 из 5</div>
-      <div class="question-text">Сколько часов в неделю ваша команда тратит на рутинные задачи (отчёты, ответы клиентам, публикация контента)?</div>
-      <div class="options">
-        <div class="option" data-val="0"><div class="marker"></div>Больше 20 часов — это основная часть работы</div>
-        <div class="option" data-val="1"><div class="marker"></div>10–20 часов — ощутимая нагрузка</div>
-        <div class="option" data-val="2"><div class="marker"></div>5–10 часов — терпимо, но хотелось бы меньше</div>
-        <div class="option" data-val="3"><div class="marker"></div>Меньше 5 часов — мы автоматизируем рутину</div>
-      </div>
-    </div>
-
-    <div class="question" data-q="3">
-      <div class="question-number">Вопрос 4 из 5</div>
-      <div class="question-text">Пробовали ли вы внедрять AI-инструменты в бизнес? Какой у вас опыт?</div>
-      <div class="options">
-        <div class="option" data-val="3"><div class="marker"></div>Да, уже используем и видим результат</div>
-        <div class="option" data-val="2"><div class="marker"></div>Пробовали, но не сложилось — не хватило экспертизы или времени</div>
-        <div class="option" data-val="1"><div class="marker"></div>Слышали, но не знаем с чего начать</div>
-        <div class="option" data-val="0"><div class="marker"></div>Нет, считаем что AI — это не про наш бизнес</div>
-      </div>
-    </div>
-
-    <div class="question" data-q="4">
-      <div class="question-number">Вопрос 5 из 5</div>
-      <div class="question-text">Как вы оцениваете свою готовность инвестировать время/деньги в автоматизацию прямо сейчас?</div>
-      <div class="options">
-        <div class="option" data-val="3"><div class="marker"></div>Готовы — есть бюджет и понимание зачем</div>
-        <div class="option" data-val="2"><div class="marker"></div>Интересно, но нужны доказательства ROI</div>
-        <div class="option" data-val="1"><div class="marker"></div>Думаем об этом, но пока не приоритет</div>
-        <div class="option" data-val="0"><div class="marker"></div>Не видим смысла / нет ресурсов</div>
-      </div>
-    </div>
-
-    <div class="nav-buttons">
-      <button class="btn btn-prev" id="prevBtn" disabled>← Назад</button>
-      <button class="btn btn-next" id="nextBtn">Далее →</button>
     </div>
   </div>
+  <div class="scroll-indicator">↓ листай</div>
+</section>
 
-  <div class="result" id="result">
-    <div class="score-circle" id="scoreCircle">0</div>
-    <h2 id="resultTitle"></h2>
-    <div class="level" id="resultLevel"></div>
-    <div class="advice" id="resultAdvice"></div>
-    <a class="cta-btn" id="ctaBtn" href="#">Получить бесплатный AI-аудит →</a>
-    <br>
-    <button class="restart-btn" id="restartBtn">Пройти заново</button>
+<!-- Metrics bar -->
+<div class="metrics-bar">
+  <div class="metrics-grid">
+    <div>
+      <div class="metric-value">6</div>
+      <div class="metric-label">блоков программы</div>
+    </div>
+    <div>
+      <div class="metric-value">28</div>
+      <div class="metric-label">модулей</div>
+    </div>
+    <div>
+      <div class="metric-value">12–15</div>
+      <div class="metric-label">часов практики</div>
+    </div>
+    <div>
+      <div class="metric-value">∞</div>
+      <div class="metric-label">доступ навсегда</div>
+    </div>
   </div>
 </div>
 
+<!-- How it works -->
+<section>
+  <div class="section-inner">
+    <h2 class="section-title">Как устроен курс</h2>
+    <p class="section-subtitle">Всё внутри Claude Code. Ты не смотришь видео — ты работаешь маркетологом в реальном симуляторе стоматологической сети.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🦷</div>
+        <h3>Практика с первой минуты</h3>
+        <p>Никаких видео и слайдов. Ты запускаешь агентов в Claude Code с первого модуля. Симулятор сети клиник «DentaPro» — 3 филиала, 12 врачей, реальные KPI.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📖</div>
+        <h3>Один нарратив — одна сеть</h3>
+        <p>Весь курс — один сквозной кейс. Контент, отзывы, воронка, лендинг — всё внутри одной клиники. Как в реальной работе.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Шаблоны остаются с тобой</h3>
+        <p>После курса у тебя: CLAUDE.md под стоматологию, /skills для рутинных задач, настроенные MCP. Всё готово к бою.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Speed comparison -->
+<section class="section-dark">
+  <div class="section-inner">
+    <h2 class="section-title">Как меняется работа</h2>
+    <p class="section-subtitle">Конкретные задачи маркетолога стоматологии — до и после курса.</p>
+    <table class="speed-table">
+      <thead>
+        <tr><th>Задача</th><th>Было</th><th>Стало</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Контент-план на неделю (3 площадки)</td>
+          <td class="before">3–4 часа ручного сбора</td>
+          <td class="after">20 минут (агент-копирайтер + SMM-стратег)</td>
+        </tr>
+        <tr>
+          <td>Мониторинг отзывов по 3 клиникам</td>
+          <td class="before">1 час в день — читать вручную</td>
+          <td class="after">5 минут (автоматический дайджест с тональностью)</td>
+        </tr>
+        <tr>
+          <td>Анализ конкурентов (5 клиник)</td>
+          <td class="before">Полдня — собрать, сравнить, выписать</td>
+          <td class="after">15 минут (параллельные агенты + web_fetch)</td>
+        </tr>
+        <tr>
+          <td>ROMI по каналам привлечения</td>
+          <td class="before">2–3 часа в Excel</td>
+          <td class="after">20 минут (из CSV → дашборд)</td>
+        </tr>
+        <tr>
+          <td>Лендинг под акцию</td>
+          <td class="before">Неделя — дизайнер + верстальщик</td>
+          <td class="after">40 минут (вайбкодинг → деплой на Vercel)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Pain points -->
+<section>
+  <div class="section-inner">
+    <h2 class="section-title">Узнаёшь себя?</h2>
+    <p class="section-subtitle">Типичные боли маркетолога в стоматологии, которые решает Claude Code.</p>
+    <div class="pain-grid">
+      <div class="pain-item">
+        <span class="pain-icon">😤</span>
+        <span>«Каждую неделю пишу 10+ постов руками — времени на стратегию нет»</span>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">😰</span>
+        <span>«Отзывы читаю вручную на 3 площадках — пропускаю негатив»</span>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">🤯</span>
+        <span>«Не могу посчитать ROMI — данные по каналам размазаны по Excel»</span>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">😴</span>
+        <span>«Каждый месяц однотипный отчёт для главврача — убивает день»</span>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">😬</span>
+        <span>«Лендинг под акцию — жду дизайнера неделю, хотя мог бы сам»</span>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">🥴</span>
+        <span>«Конкуренты запускают акции — я узнаю последним»</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Program -->
+<section class="section-dark" id="program">
+  <div class="section-inner">
+    <h2 class="section-title">6 блоков · 28 модулей</h2>
+    <p class="section-subtitle">Каждый модуль — реальная задача в симуляторе стоматологической сети «DentaPro».</p>
+    <div class="program-list">
+
+      <div class="program-block">
+        <div class="program-header" onclick="toggleBlock(this)">
+          <span>Блок 1 — Онбординг: настройка под клинику <span class="badge">10 модулей</span></span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="program-content">
+          <div class="program-content-inner">
+            <ul>
+              <li>Первый день в DentaPro — знакомство с Claude Code</li>
+              <li>Настройка CLAUDE.md под стоматологическую клинику</li>
+              <li>Дайджест для CEO: загрузка сайта, соцсетей, отзывов</li>
+              <li>Параллельные агенты: мониторинг 3 площадок с отзывами</li>
+              <li>AI-команда: копирайтер, SMM, аналитик отзывов, стратег</li>
+              <li>Память проекта: Claude помнит контекст DentaPro между сессиями</li>
+              <li>Навигация в Claude Code: slash-команды, best practices</li>
+              <li>Skills: создаём /отзывы, /контент-план, /дайджест</li>
+              <li>Конкурентная разведка: анализ 3 клиник за 15 минут</li>
+              <li>Свой /skill за 15 минут под твою задачу</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="program-block">
+        <div class="program-header" onclick="toggleBlock(this)">
+          <span>Блок 2 — Контент и соцсети <span class="badge">5 модулей</span></span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="program-content">
+          <div class="program-content-inner">
+            <ul>
+              <li>Контент-стратегия для стоматологии: боли → рубрики → форматы</li>
+              <li>Мультиагентное ревью: контент-план на неделю (Instagram, Telegram, VK)</li>
+              <li>Посты-кейсы «до/после»: структура, заголовки, вовлечение</li>
+              <li>Автоматический дайджест: топ-5 постов из каналов-конкурентов</li>
+              <li>Визуальные промпты для соцсетей: API-генерация изображений</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="program-block">
+        <div class="program-header" onclick="toggleBlock(this)">
+          <span>Блок 3 — Репутация и отзывы <span class="badge">4 модуля</span></span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="program-content">
+          <div class="program-content-inner">
+            <ul>
+              <li>Сбор отзывов: Yandex, 2GIS, ProDoctorov — один агент</li>
+              <li>Тональный анализ: позитив/негатив, темы, повторяющиеся жалобы</li>
+              <li>Генерация ответов на негативные отзывы (с согласованием)</li>
+              <li>Дашборд репутации: динамика рейтинга, NPS, топ-5 проблем</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="program-block">
+        <div class="program-header" onclick="toggleBlock(this)">
+          <span>Блок 4 — Воронка и аналитика <span class="badge">5 модулей</span></span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="program-content">
+          <div class="program-content-inner">
+            <ul>
+              <li>Воронка: лид → звонок → запись → приём → повторный визит</li>
+              <li>CAC, LTV, Payback по каналам привлечения (из CSV)</li>
+              <li>Scheduled агент: еженедельный ROMI-дайджест</li>
+              <li>Анализ конкурентов: цены, акции, новые услуги</li>
+              <li>Отчёт для главврача: данные + нарратив + рекомендации</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="program-block">
+        <div class="program-header" onclick="toggleBlock(this)">
+          <span>Блок 5 — Вайбкодинг: лендинг под акцию <span class="badge">3 модуля</span></span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="program-content">
+          <div class="program-content-inner">
+            <ul>
+              <li>Mindset «маркетолог-разработчик»: от идеи до сайта</li>
+              <li>Планирование: структура лендинга, CI, текст, призыв</li>
+              <li>Сборка: Claude пишет код → GitHub → Vercel → живой URL за 40 минут</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="program-block">
+        <div class="program-header" onclick="toggleBlock(this)">
+          <span>Блок 6 — MCP: связка с CRM и Telegram <span class="badge">1 модуль</span></span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="program-content">
+          <div class="program-content-inner">
+            <ul>
+              <li>MCP-подключение к CRM клиники (YClients / 1С) + Google Sheets</li>
+              <li>Telegram-бот: автоответы на типовые вопросы пациентов</li>
+              <li>Командный CLAUDE.md: единый голос бренда для всей сети</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section>
+  <div class="section-inner">
+    <h2 class="section-title">Навыки, которые остаются</h2>
+    <p class="section-subtitle">После курса ты умеешь:</p>
+    <div class="skills-list">
+      <div class="skill-item"><span class="skill-check">✓</span> Настраивать AI-агентов под задачи стоматологии</div>
+      <div class="skill-item"><span class="skill-check">✓</span> Запускать параллельных агентов: конкурентов за 15 мин</div>
+      <div class="skill-item"><span class="skill-check">✓</span> Писать контент-стратегию за один сеанс с мультиагентным ревью</div>
+      <div class="skill-item"><span class="skill-check">✓</span> Мониторить репутацию и отзывы автоматически</div>
+      <div class="skill-item"><span class="skill-check">✓</span> Считать CAC/LTV/Payback без формул вручную</div>
+      <div class="skill-item"><span class="skill-check">✓</span> Вайбкодить лендинги под акции без разработчика</div>
+      <div class="skill-item"><span class="skill-check">✓</span> Подключать CRM и мессенджеры через MCP</div>
+      <div class="skill-item"><span class="skill-check">✓</span> Готовить отчёты для CEO/главврача за 40 минут</div>
+    </div>
+  </div>
+</section>
+
+<!-- Requirements -->
+<section class="section-dark" id="requirements">
+  <div class="section-inner">
+    <h2 class="section-title">Требования</h2>
+    <p class="section-subtitle">Всё, что нужно для старта:</p>
+    <div class="req-grid">
+      <div class="req-item"><span class="req-icon">🤖</span> Подписка Claude Pro или Max (от $20/мес)</div>
+      <div class="req-item"><span class="req-icon">💻</span> macOS, Windows 10+ или Linux</div>
+      <div class="req-item"><span class="req-icon">📘</span> Опыт в маркетинге (стоматология — плюс, но не обязательно)</div>
+      <div class="req-item"><span class="req-icon">🔧</span> Node.js 18+ (опционально — только для установки через терминал)</div>
+      <div class="req-item"><span class="req-icon">🚫</span> Опыт программирования не нужен</div>
+      <div class="req-item"><span class="req-icon">🌐</span> Доступ в интернет</div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section>
+  <div class="section-inner">
+    <h2 class="section-title">Что говорят студенты</h2>
+    <p class="section-subtitle">Отзывы с курса «Claude Code для маркетологов» Евгении Одуд — формат тот же, кейсы под стоматологию.</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p>«Ощущение, что я ускорилась на х20! Курс очень понравился, сразу же проходишь его в среде Клода, просто вау! Материалы, которые остаются после курса — ещё во время прохождения добавила в свою рабочую рутину.»</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">МП</div>
+          <div>
+            <div class="testimonial-name">Мила Плющ</div>
+            <div class="testimonial-role">ex-CMO Яндекс</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p>«Закончила не отрываясь за 2 дня — использую терминал, генерирую картинки, оркестрирую агентами. Создала md файлы про свою компанию, скилы и настроила процессы! Формат учись сразу на рабочих кейсах безумный!»</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">ЕБ</div>
+          <div>
+            <div class="testimonial-name">Елена Белык</div>
+            <div class="testimonial-role">PMM, Booking</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="section-dark" id="price">
+  <div class="section-inner">
+    <div class="pricing-card">
+      <h2 class="section-title">Один платёж — постоянный доступ</h2>
+      <div class="pricing-old">10 990 ₽</div>
+      <div class="pricing-current">7 990 ₽</div>
+      <div class="pricing-note">Early Bird · Единоразово · Доступ навсегда · Цена вырастет</div>
+      <ul class="pricing-features">
+        <li>6 блоков, 28 модулей, 12–15 часов практики</li>
+        <li>Симулятор сети клиник «DentaPro»</li>
+        <li>Все артефакты и шаблоны остаются у тебя</li>
+        <li>Доступ ко всем обновлениям курса</li>
+        <li>Закрытый чат с автором</li>
+      </ul>
+      <a href="#" class="btn btn-primary" style="font-size:18px; padding:16px 48px;">🔥 Купить через Telegram</a>
+    </div>
+  </div>
+</section>
+
+<!-- Author -->
+<section id="about">
+  <div class="section-inner">
+    <h2 class="section-title">Кто сделал курс</h2>
+    <div class="author-section">
+      <div class="author-avatar-lg">АО</div>
+      <div class="author-info">
+        <h3>Алексей</h3>
+        <p>
+          10+ лет в маркетинге и AI-автоматизации. Веду каналы <strong>@papaleshapro</strong> и <strong>@automatizator_ai</strong> (суммарно 5 000+ подписчиков). 
+          Работаю со стоматологиями: маркетинг, воронки, автоматизация. 
+          Спроектировал архитектуру AI-компании из 15 агентов. 
+          Верю, что Claude Code — это «джуниор, которого вы наняли» и лучший инструмент для маркетолога.
+        </p>
+        <p style="margin-top:16px;">
+          → <a href="https://t.me/papaleshapro" style="color: var(--accent);">@papaleshapro</a>
+          &nbsp;·&nbsp; → <a href="https://t.me/automatizator_ai" style="color: var(--accent);">@automatizator_ai</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>
+    © 2026 DentOdud · Автор: <a href="https://t.me/papaleshapro">Алексей 🤙</a> · 
+    Вдохновлено <a href="https://odud.marketing">odud.marketing</a> · 
+    <a href="#">Оферта</a> · <a href="#">Конфиденциальность</a>
+  </p>
+</footer>
+
 <script>
-const questions = document.querySelectorAll('.question');
-const options = document.querySelectorAll('.option');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const progressFill = document.getElementById('progressFill');
-const quizEl = document.getElementById('quiz');
-const resultEl = document.getElementById('result');
-const scoreCircle = document.getElementById('scoreCircle');
-const resultTitle = document.getElementById('resultTitle');
-const resultLevel = document.getElementById('resultLevel');
-const resultAdvice = document.getElementById('resultAdvice');
-const ctaBtn = document.getElementById('ctaBtn');
-const restartBtn = document.getElementById('restartBtn');
-
-let current = 0;
-let answers = new Array(5).fill(null);
-
-function updateUI() {
-  questions.forEach((q, i) => q.classList.toggle('active', i === current));
-  prevBtn.disabled = current === 0;
-  nextBtn.textContent = current === 4 ? 'Показать результат →' : 'Далее →';
-  progressFill.style.width = ((current) / 5 * 100) + '%';
-}
-
-options.forEach(opt => {
-  opt.addEventListener('click', () => {
-    const qIndex = parseInt(opt.closest('.question').dataset.q);
-    answers[qIndex] = parseInt(opt.dataset.val);
-    opt.closest('.question').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-    opt.classList.add('selected');
-  });
-});
-
-prevBtn.addEventListener('click', () => { if (current > 0) { current--; updateUI(); } });
-
-nextBtn.addEventListener('click', () => {
-  if (current < 4) { current++; updateUI(); }
-  else showResult();
-});
-
-function showResult() {
-  const total = answers.reduce((a, b) => a + b, 0);
-  const max = 15;
-  const pct = Math.round(total / max * 100);
-
-  let color, title, level, advice;
-  if (total >= 12) {
-    color = '#34d399';
-    title = '🚀 Вы готовы к AI!';
-    level = `Набрано ${total} из ${15} — высокая готовность`;
-    advice = 'У вас формализованные процессы и есть опыт работы с AI. Вы на один шаг от того, чтобы <strong>масштабировать автоматизацию</strong> и получить серьёзное конкурентное преимущество. Рекомендуем сфокусироваться на внедрении AI-агентов для рутинных задач и аналитики.';
-  } else if (total >= 8) {
-    color = '#60a5fa';
-    title = '⚡ Хороший фундамент';
-    level = `Набрано ${total} из ${15} — средняя готовность`;
-    advice = 'У вас есть база, но есть пробелы. <strong>Главный фокус</strong> — формализовать процессы и структурировать данные. Без этого AI-инструменты не дадут максимального эффекта. Начните с аудита — он покажет, где автоматизация даст наибольший возврат.';
-  } else if (total >= 4) {
-    color = '#fbbf24';
-    title = '🔧 Нужна подготовка';
-    level = `Набрано ${total} из ${15} — низкая готовность`;
-    advice = 'Прежде чем внедрять AI, стоит <strong>навести порядок в процессах</strong>. Опишите повторяющиеся задачи, оцифруйте данные, разберитесь с рутиной. Это не сложно — но без этого любой AI-инструмент будет как «швейцарский нож в руках младенца».';
+function toggleBlock(header) {
+  header.classList.toggle('open');
+  const content = header.nextElementSibling;
+  const inner = content.querySelector('.program-content-inner');
+  if (header.classList.contains('open')) {
+    content.style.maxHeight = inner.scrollHeight + 24 + 'px';
   } else {
-    color = '#f87171';
-    title = '🌱 Ранняя стадия';
-    level = `Набрано ${total} из ${15} — начальный уровень`;
-    advice = 'Вы в самом начале пути — и это нормально. <strong>Главный шаг</strong> — начать замечать рутину и фиксировать процессы. Даже простая автоматизация (шаблоны ответов, планировщик постов) может сэкономить часы в неделю. Начните с малого.';
+    content.style.maxHeight = '0';
   }
-
-  quizEl.style.display = 'none';
-  resultEl.classList.add('active');
-  scoreCircle.textContent = pct + '%';
-  scoreCircle.style.setProperty('--score-color', color);
-  scoreCircle.style.setProperty('--score-pct', pct + '%');
-  scoreCircle.style.color = color;
-  resultTitle.textContent = title;
-  resultLevel.textContent = level;
-  resultAdvice.innerHTML = advice;
 }
-
-restartBtn.addEventListener('click', () => {
-  current = 0;
-  answers = new Array(5).fill(null);
-  options.forEach(o => o.classList.remove('selected'));
-  resultEl.classList.remove('active');
-  quizEl.style.display = 'block';
-  updateUI();
+// Open first block by default
+document.addEventListener('DOMContentLoaded', function() {
+  const firstBlock = document.querySelector('.program-header');
+  if (firstBlock) firstBlock.click();
 });
-
-updateUI();
 </script>
 </body>
 </html>
