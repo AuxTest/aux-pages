@@ -398,7 +398,7 @@ body {
 .section {
   max-width: 900px;
   margin: 0 auto;
-  padding: 80px 24px;
+  padding: 60px 24px;
   position: relative;
   z-index: 1;
 }
@@ -585,7 +585,7 @@ body {
 
 .final-cta {
   text-align: center;
-  padding: 80px 24px;
+  padding: 40px 24px 20px;
   max-width: 600px;
   margin: 0 auto;
   position: relative;
@@ -598,13 +598,16 @@ body {
 }
 .final-cta p {
   color: var(--text-secondary);
-  margin-bottom: 32px;
-  font-size: 17px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+@media (min-width: 500px) {
+  .final-cta p { white-space: nowrap; }
 }
 
 .footer {
   text-align: center;
-  padding: 40px 24px;
+  padding: 24px;
   border-top: 1px solid var(--border);
   color: var(--text-muted);
   font-size: 13px;
@@ -637,7 +640,7 @@ body {
 
 <section class="hero">
   <div class="hero-badge">🤖 Бесплатный AI-бот в Telegram</div>
-  <h1>Получи <span class="glitch gradient-text" data-text="контент-план на 30 постов">контент-план на 30 постов</span> за <span class="typing-counter" data-target="60" data-suffix=" сек">0 сек</span></h1>
+  <h1>Получи <span class="glitch gradient-text" data-text="контент-план на 30 постов">контент-план на 30 постов</span> за 60 секунд</h1>
   <p>AI-агент проанализирует твою нишу, Tone of Voice и конкурентов — и выдаст готовый план для Telegram-канала. Без воды, без шаблонов, с реальными темами и текстами.</p>
   <a href="#get" class="cta-button pulse-ring">🤖 Запустить бота бесплатно</a>
   <div class="hero-sub">Подписка на канал + деплой бота = полный доступ</div>
