@@ -211,6 +211,13 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+.accent-text {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
 .stat-label {
   font-size: 13px;
   color: var(--text-muted);
@@ -643,7 +650,7 @@ body {
 
 <section class="hero">
   <div class="hero-badge">🤖 Бесплатный AI-бот в Telegram</div>
-  <h1><span>Получи контент-план</span><br><span class="gradient-text">на месяц</span><br><span>за </span><span class="typing-counter" data-target="60" data-suffix=" секунд">60 секунд</span></h1>
+  <h1><span class="gradient-text">Получи контент-план</span><br><span class="gradient-text">на месяц</span><br>за <span class="typing-counter" data-target="60" data-suffix=" секунд">60 секунд</span></h1>
   <p>AI-агент проанализирует твою нишу, изучит Tone of Voice и конкурентов — и соберёт готовый контент-план для Telegram-канала. Без воды, без шаблонов. Только рабочие темы и живые тексты.</p>
   <a href="#get" class="cta-button pulse-ring">🤖 Запустить бота бесплатно</a>
   <div class="hero-sub">Подписка на канал + деплой бота = полный доступ</div>
@@ -659,12 +666,12 @@ body {
     <div class="stat-label">генерация</div>
   </div>
   <div class="stat-item">
-    <div class="stat-number">47 шт</div>
-    <div class="stat-label">готовых промптов</div>
+    <div class="stat-number">47 промптов</div>
+    <div class="stat-label">готовых шаблонов</div>
   </div>
   <div class="stat-item">
-    <div class="stat-number">100%</div>
-    <div class="stat-label">бесплатно</div>
+    <div class="stat-number accent-text">100%</div>
+    <div class="stat-label accent-text">бесплатно</div>
   </div>
 </div>
 
