@@ -38,7 +38,186 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   transition: background 0.3s, color 0.3s;
+  overflow-x: hidden;
 }
+
+/* === MATRIX RAIN BACKGROUND === */
+#matrix-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.06;
+}
+[data-theme="light"] #matrix-canvas { opacity: 0.03; }
+
+/* === FLOATING EMOJIS === */
+.floating-emoji {
+  position: absolute;
+  font-size: 24px;
+  opacity: 0;
+  pointer-events: none;
+  animation: floatUp 6s ease-in infinite;
+}
+@keyframes floatUp {
+  0% { opacity: 0; transform: translateY(0) rotate(0deg) scale(0.5); }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.7; }
+  100% { opacity: 0; transform: translateY(-120px) rotate(360deg) scale(1.2); }
+}
+
+/* === GLITCH EFFECT === */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--bg-body);
+  opacity: 0;
+}
+.glitch:hover::before {
+  animation: glitch-1 0.3s linear;
+  color: #ef4444;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+}
+.glitch:hover::after {
+  animation: glitch-2 0.3s linear;
+  color: #3b82f6;
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+}
+@keyframes glitch-1 {
+  0% { opacity: 0; transform: translate(0); }
+  20% { opacity: 0.8; transform: translate(-3px, 2px); }
+  40% { opacity: 0.8; transform: translate(3px, -1px); }
+  60% { opacity: 0.8; transform: translate(-2px, 1px); }
+  80% { opacity: 0.8; transform: translate(2px, -2px); }
+  100% { opacity: 0; transform: translate(0); }
+}
+@keyframes glitch-2 {
+  0% { opacity: 0; transform: translate(0); }
+  20% { opacity: 0.8; transform: translate(3px, -2px); }
+  40% { opacity: 0.8; transform: translate(-3px, 1px); }
+  60% { opacity: 0.8; transform: translate(2px, -1px); }
+  80% { opacity: 0.8; transform: translate(-2px, 2px); }
+  100% { opacity: 0; transform: translate(0); }
+}
+
+/* === TYPING COUNTER === */
+.typing-counter {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  min-width: 2ch;
+}
+
+/* === SCROLL REVEAL === */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* === PULSE RING === */
+.pulse-ring {
+  position: relative;
+}
+.pulse-ring::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  transform: translate(-50%, -50%);
+  animation: pulse-ring 2s ease-out infinite;
+}
+@keyframes pulse-ring {
+  0% { width: 100%; height: 100%; opacity: 0.6; }
+  100% { width: 200%; height: 200%; opacity: 0; }
+}
+
+/* === CTA GLOW === */
+.cta-button {
+  position: relative;
+  overflow: hidden;
+}
+.cta-button::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+  animation: shimmer 3s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* === MOCKUP FLOAT === */
+.mockup-float {
+  animation: mockupFloat 6s ease-in-out infinite;
+}
+@keyframes mockupFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* === CHAT BUBBLE APPEAR === */
+.chat-appear {
+  opacity: 0;
+  transform: translateY(10px) scale(0.95);
+  animation: chatAppear 0.4s ease forwards;
+}
+@keyframes chatAppear {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.chat-appear-d1 { animation-delay: 0.5s; }
+.chat-appear-d2 { animation-delay: 1.2s; }
+.chat-appear-d3 { animation-delay: 2.0s; }
+.chat-appear-d4 { animation-delay: 3.5s; }
+
+/* === STATS COUNTER === */
+.stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 40px auto;
+  max-width: 600px;
+  flex-wrap: wrap;
+}
+.stat-item {
+  text-align: center;
+}
+.stat-number {
+  font-size: 42px;
+  font-weight: 800;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* === ORIGINAL STYLES === */
 .nav {
   display: flex;
   justify-content: space-between;
@@ -75,6 +254,8 @@ body {
   margin: 0 auto;
   padding: 80px 24px 60px;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 .hero-badge {
   display: inline-block;
@@ -86,6 +267,12 @@ body {
   font-weight: 600;
   margin-bottom: 24px;
   border: 1px solid rgba(34,197,94,0.2);
+  animation: badgePop 0.6s ease;
+}
+@keyframes badgePop {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
 }
 .hero h1 {
   font-size: clamp(32px, 6vw, 56px);
@@ -94,7 +281,7 @@ body {
   margin-bottom: 20px;
   letter-spacing: -0.02em;
 }
-.hero h1 span {
+.hero h1 .gradient-text {
   background: var(--gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -133,13 +320,14 @@ body {
 
 .mockup {
   max-width: 780px;
-  margin: 60px auto 0;
+  margin: 0 auto;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 24px 80px rgba(0,0,0,0.3);
   text-align: left;
+  position: relative;
 }
 .mockup-header {
   display: flex;
@@ -160,7 +348,6 @@ body {
   display: flex;
   gap: 12px;
 }
-.chat-msg.bot { }
 .chat-msg.user { justify-content: flex-end; }
 .chat-bubble {
   max-width: 80%;
@@ -212,6 +399,8 @@ body {
   max-width: 900px;
   margin: 0 auto;
   padding: 80px 24px;
+  position: relative;
+  z-index: 1;
 }
 .section-title {
   font-size: clamp(24px, 4vw, 36px);
@@ -245,7 +434,18 @@ body {
 .feature-icon {
   font-size: 28px;
   margin-bottom: 14px;
+  display: inline-block;
+  animation: iconBounce 2s ease-in-out infinite;
 }
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.feature-card:nth-child(2) .feature-icon { animation-delay: 0.3s; }
+.feature-card:nth-child(3) .feature-icon { animation-delay: 0.6s; }
+.feature-card:nth-child(4) .feature-icon { animation-delay: 0.9s; }
+.feature-card:nth-child(5) .feature-icon { animation-delay: 1.2s; }
+.feature-card:nth-child(6) .feature-icon { animation-delay: 1.5s; }
 .feature-card h3 {
   font-size: 16px;
   font-weight: 700;
@@ -299,16 +499,32 @@ body {
   padding: 48px;
   text-align: center;
   margin-top: 60px;
+  position: relative;
+  overflow: hidden;
+}
+.gift-box::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(34,197,94,0.05) 0%, transparent 70%);
+  animation: rotateGlow 10s linear infinite;
+}
+@keyframes rotateGlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 .gift-box h2 {
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 12px;
+  position: relative;
 }
 .gift-box p {
   color: var(--text-secondary);
   margin-bottom: 24px;
   font-size: 16px;
+  position: relative;
 }
 .gift-items {
   display: flex;
@@ -316,6 +532,7 @@ body {
   justify-content: center;
   gap: 12px;
   margin-bottom: 32px;
+  position: relative;
 }
 .gift-tag {
   padding: 10px 20px;
@@ -324,6 +541,11 @@ body {
   border-radius: 100px;
   font-size: 14px;
   font-weight: 600;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.gift-tag:hover {
+  transform: scale(1.05);
+  border-color: var(--accent);
 }
 
 .faq {
@@ -366,6 +588,8 @@ body {
   padding: 80px 24px;
   max-width: 600px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 .final-cta h2 {
   font-size: clamp(28px, 5vw, 42px);
@@ -384,6 +608,8 @@ body {
   border-top: 1px solid var(--border);
   color: var(--text-muted);
   font-size: 13px;
+  position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 640px) {
@@ -392,10 +618,14 @@ body {
   .section { padding: 60px 20px; }
   .how-it-works, .gift-box { padding: 32px 20px; }
   .mockup { margin: 40px 16px 0; }
+  .stats-row { gap: 24px; }
+  .stat-number { font-size: 32px; }
 }
 </style>
 </head>
 <body>
+
+<canvas id="matrix-canvas"></canvas>
 
 <nav class="nav">
   <div class="nav-logo">⚡ AI-SMM-Бот</div>
@@ -407,13 +637,32 @@ body {
 
 <section class="hero">
   <div class="hero-badge">🤖 Бесплатный AI-бот в Telegram</div>
-  <h1>Получи <span>контент-план на 30 постов</span> за 60 секунд</h1>
-  <p>AI-агент проанализирует твою нишу,  Tone of Voice и конкурентов — и выдаст готовый план для Telegram-канала. Без воды, без шаблонов, с реальными темами и текстами.</p>
-  <a href="#get" class="cta-button">🤖 Запустить бота бесплатно</a>
+  <h1>Получи <span class="glitch gradient-text" data-text="контент-план на 30 постов">контент-план на 30 постов</span> за <span class="typing-counter" data-target="60" data-suffix=" сек">0 сек</span></h1>
+  <p>AI-агент проанализирует твою нишу, Tone of Voice и конкурентов — и выдаст готовый план для Telegram-канала. Без воды, без шаблонов, с реальными темами и текстами.</p>
+  <a href="#get" class="cta-button pulse-ring">🤖 Запустить бота бесплатно</a>
   <div class="hero-sub">Подписка на канал + деплой бота = полный доступ</div>
 </section>
 
-<div class="mockup">
+<div class="stats-row reveal">
+  <div class="stat-item">
+    <div class="stat-number"><span class="typing-counter" data-target="30" data-suffix=" постов">0 постов</span></div>
+    <div class="stat-label">на месяц</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number"><span class="typing-counter" data-target="60" data-suffix=" сек">0 сек</span></div>
+    <div class="stat-label">генерация</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number"><span class="typing-counter" data-target="47" data-suffix=" шт">0 шт</span></div>
+    <div class="stat-label">готовых промптов</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number"><span class="typing-counter" data-target="100" data-suffix="%">0%</span></div>
+    <div class="stat-label">бесплатно</div>
+  </div>
+</div>
+
+<div class="mockup mockup-float">
   <div class="mockup-header">
     <div class="dot dot-r"></div>
     <div class="dot dot-y"></div>
@@ -421,58 +670,59 @@ body {
     <span class="mockup-title">AI-SMM-Бот — Telegram</span>
   </div>
   <div class="mockup-body">
-    <div class="chat-msg bot">
+    <div class="chat-msg bot chat-appear chat-appear-d1">
       <div class="chat-avatar">🤖</div>
       <div class="chat-bubble">Привет! Я AI-SMM-агент. Напиши тему своего канала, и я сгенерирую 30 постов на месяц. Начнём?</div>
     </div>
-    <div class="chat-msg user">
+    <div class="chat-msg user chat-appear chat-appear-d2">
       <div class="chat-bubble">Хочу канал про AI-инструменты для маркетологов</div>
       <div class="chat-avatar user-avatar">👤</div>
     </div>
-    <div class="chat-msg bot">
+    <div class="chat-msg bot chat-appear chat-appear-d3">
       <div class="chat-avatar">🤖</div>
       <div class="chat-bubble">
         <div class="typing-dots"><span></span><span></span><span></span></div>
       </div>
     </div>
-    <div class="chat-msg bot">
+    <div class="chat-msg bot chat-appear chat-appear-d4">
       <div class="chat-avatar">🤖</div>
-      <div class="chat-bubble">✅ Готово! Вот твой контент-план:<br><br>📅 <b>Неделя 1:</b><br>1. «5 AI-инструментов, которые сэкономят 10 часов в неделю»<br>2. «Как я автоматизировал SMM с помощью 3 агентов»<br>3. «Обзор: Claude vs ChatGPT для контента — кто лучше?»<br>4. «Реальный кейс: +340% охвата через AI-посты»<br>5. «Шаблон промпта для поста-кейса»<br><br>📅 <b>Неделя 2:</b><br>6. «Как прогревать аудиторию через AI-сторителлинг»<br>...<br><br>📦 Полный план на 30 постов — в закреплённом сообщении ↓
+      <div class="chat-bubble">
+        ✅ Готово! Вот твой контент-план:<br><br>📅 <b>Неделя 1:</b><br>1. «5 AI-инструментов, которые сэкономят 10 часов в неделю»<br>2. «Как я автоматизировал SMM с помощью 3 агентов»<br>3. «Обзор: Claude vs ChatGPT для контента — кто лучше?»<br>4. «Реальный кейс: +340% охвата через AI-посты»<br>5. «Шаблон промпта для поста-кейса»<br><br>📅 <b>Неделя 2:</b><br>6. «Как прогревать аудиторию через AI-сторителлинг»<br>...<br><br>📦 Полный план на 30 постов — в закреплённом сообщении ↓
       </div>
     </div>
   </div>
 </div>
 
 <section class="section">
-  <h2 class="section-title">Что умеет бот</h2>
-  <p class="section-sub">Не просто шаблоны — а реальная работа SMM-агента в формате бота</p>
+  <h2 class="section-title reveal">Что умеет бот</h2>
+  <p class="section-sub reveal reveal-delay-1">Не просто шаблоны — а реальная работа SMM-агента в формате бота</p>
   <div class="features-grid">
-    <div class="feature-card">
+    <div class="feature-card reveal reveal-delay-1">
       <div class="feature-icon">📊</div>
       <h3>Анализ конкурентов</h3>
       <p>Бот сканирует каналы конкурентов, выявляет паттерны и адаптирует под твою нишу</p>
     </div>
-    <div class="feature-card">
+    <div class="feature-card reveal reveal-delay-2">
       <div class="feature-icon">✍️</div>
       <h3>Готовые тексты постов</h3>
       <p>Не только темы — и сами тексты с учётом твоего Tone of Voice и аудитории</p>
     </div>
-    <div class="feature-card">
+    <div class="feature-card reveal reveal-delay-3">
       <div class="feature-icon">📅</div>
       <h3>Контент-план на месяц</h3>
       <p>30 постов с привязкой к датам, поводам и трендам в индустрии</p>
     </div>
-    <div class="feature-card">
+    <div class="feature-card reveal reveal-delay-3">
       <div class="feature-icon">🔄</div>
       <h3>Обновление каждую неделю</h3>
-      <p>Каждую неделю бот генерирует свежий контент-план с учётом актуальных тем</p>
+      <p>Каждую неделю бот генерирует свежий контент с учётом актуальных тем</p>
     </div>
-    <div class="feature-card">
+    <div class="feature-card reveal reveal-delay-4">
       <div class="feature-icon">🎯</div>
       <h3>Нишевые промпты</h3>
       <p>Готовые промпты для любой задачи: от сторителлинга до продающих заголовков</p>
     </div>
-    <div class="feature-card">
+    <div class="feature-card reveal reveal-delay-5">
       <div class="feature-icon">💬</div>
       <h3>Интерактивный формат</h3>
       <p>Общаешься с ботом как с живым SMM-менеджером — в формате диалога</p>
@@ -481,23 +731,23 @@ body {
 </section>
 
 <section class="section" style="padding-top: 0;">
-  <div class="how-it-works">
+  <div class="how-it-works reveal">
     <h2 class="section-title" style="text-align:left; margin-bottom:32px;">Как получить контент-план</h2>
-    <div class="step">
+    <div class="step reveal reveal-delay-1">
       <div class="step-num">1</div>
       <div class="step-content">
         <h3>Подписываешься на канал</h3>
         <p>Переходишь в Telegram-канал @papaleshapro — подписываешься</p>
       </div>
     </div>
-    <div class="step">
+    <div class="step reveal reveal-delay-2">
       <div class="step-num">2</div>
       <div class="step-content">
         <h3>Деплоишь своего бота</h3>
         <p>Следуешь инструкции — запускаешь AI-SMM-бота на своём сервере за 2 минуты</p>
       </div>
     </div>
-    <div class="step">
+    <div class="step reveal reveal-delay-3">
       <div class="step-num">3</div>
       <div class="step-content">
         <h3>Получаешь результат</h3>
@@ -508,52 +758,52 @@ body {
 </section>
 
 <section class="section" style="padding-top: 0;">
-  <div class="gift-box">
+  <div class="gift-box reveal">
     <h2>🎁 Бонус за подписку + деплой</h2>
     <p>Помимо контент-плана получишь доступ к закрытому набору ресурсов:</p>
     <div class="gift-items">
-      <span class="gift-tag">📋 47 готовых промптов</span>
-      <span class="gift-tag">📈 Шаблоны отчётов</span>
-      <span class="gift-tag">🎨 Визуальные шаблоны</span>
-      <span class="gift-tag">📚 Гайд по AI-SMM</span>
-      <span class="gift-tag">💡 Еженедельные инсайты</span>
+      <span class="gift-tag reveal reveal-delay-1">📋 47 готовых промптов</span>
+      <span class="gift-tag reveal reveal-delay-2">📈 Шаблоны отчётов</span>
+      <span class="gift-tag reveal reveal-delay-3">🎨 Визуальные шаблоны</span>
+      <span class="gift-tag reveal reveal-delay-4">📚 Гайд по AI-SMM</span>
+      <span class="gift-tag reveal reveal-delay-5">💡 Еженедельные инсайты</span>
     </div>
     <a href="#get" class="cta-button">🤖 Запустить бота бесплатно</a>
   </div>
 </section>
 
 <section class="section" style="padding-top: 0;">
-  <h2 class="section-title">Частые вопросы</h2>
+  <h2 class="section-title reveal">Частые вопросы</h2>
   <div class="faq">
-    <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-item reveal reveal-delay-1" onclick="toggleFaq(this)">
       <div class="faq-question">
         Это правда бесплатно?
         <svg class="faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="faq-answer">Да, полностью. Подписка на канал + деплой бота = полный доступ ко всем функциям. Никаких скрытых платежей.</div>
     </div>
-    <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-item reveal reveal-delay-1" onclick="toggleFaq(this)">
       <div class="faq-question">
         Нужен ли опыт в AI или программировании?
         <svg class="faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="faq-answer">Нет. Бот работает как обычный Telegram-чат. Просто пишешь ему — он всё делает сам. Деплой — одна команда в терминале.</div>
     </div>
-    <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-item reveal reveal-delay-2" onclick="toggleFaq(this)">
       <div class="faq-question">
         Для каких ниш работает?
         <svg class="faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="faq-answer">Для любых: маркетинг, IT, образование, услуги, e-commerce, личный бренд. Бот адаптируется под твою аудиторию.</div>
     </div>
-    <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-item reveal reveal-delay-3" onclick="toggleFaq(this)">
       <div class="faq-question">
         Что если не понравится контент?
         <svg class="faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="faq-answer">Можно попросить перегенерировать любой пост или весь план. Бот учитывает твой фидбек и подстраивается.</div>
     </div>
-    <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-item reveal reveal-delay-4" onclick="toggleFaq(this)">
       <div class="faq-question">
         Как быстро бот выдаёт результат?
         <svg class="faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -564,10 +814,10 @@ body {
 </section>
 
 <section class="final-cta" id="get">
-  <h2>Готов протестировать?</h2>
-  <p>Подпишись на канал → задеплой бота → получи контент-план на месяц бесплатно</p>
-  <a href="https://t.me/papaleshapro" class="cta-button" target="_blank">📢 Подписаться на канал</a>
-  <div class="hero-sub" style="margin-top: 16px;">После подписки — напиши боту /start и следуй инструкции</div>
+  <h2 class="reveal">Готов протестировать?</h2>
+  <p class="reveal reveal-delay-1">Подпишись на канал → задеплой бота → получи контент-план на месяц бесплатно</p>
+  <a href="https://t.me/papaleshapro" class="cta-button reveal reveal-delay-2" target="_blank">📢 Подписаться на канал</a>
+  <div class="hero-sub reveal reveal-delay-3" style="margin-top: 16px;">После подписки — напиши боту /start и следуй инструкциям</div>
 </section>
 
 <footer class="footer">
@@ -575,6 +825,7 @@ body {
 </footer>
 
 <script>
+// === THEME TOGGLE ===
 function toggleTheme() {
   if (document.documentElement.hasAttribute('data-theme')) {
     document.documentElement.removeAttribute('data-theme');
@@ -584,9 +835,101 @@ function toggleTheme() {
     localStorage.setItem('theme', 'dark');
   }
 }
+
+// === FAQ ===
 function toggleFaq(el) {
   el.classList.toggle('open');
 }
+
+// === TYPING COUNTER ===
+function animateCounters() {
+  const counters = document.querySelectorAll('.typing-counter');
+  counters.forEach(counter => {
+    const target = parseInt(counter.dataset.target);
+    const suffix = counter.dataset.suffix || '';
+    const duration = 2000;
+    const start = performance.now();
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(target * eased);
+      counter.textContent = current + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  });
+}
+
+// === SCROLL REVEAL ===
+function initReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+// === MATRIX RAIN ===
+function initMatrix() {
+  const canvas = document.getElementById('matrix-canvas');
+  const ctx = canvas.getContext('2d');
+  let columns, drops;
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    columns = Math.floor(canvas.width / 20);
+    drops = Array(columns).fill(1);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+  function draw() {
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#22c55e';
+    ctx.font = '14px monospace';
+    for (let i = 0; i < drops.length; i++) {
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(char, i * 20, drops[i] * 20);
+      if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// === FLOATING EMOJIS AROUND MOCKUP ===
+function spawnEmojis() {
+  const emojis = ['🤖', '📱', '💬', '⚡', '🎯', '✨', '🚀', '📊', '🔥', '💡'];
+  const mockup = document.querySelector('.mockup');
+  if (!mockup) return;
+  setInterval(() => {
+    const el = document.createElement('div');
+    el.className = 'floating-emoji';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = (Math.random() * 100) + '%';
+    el.style.top = (50 + Math.random() * 40) + '%';
+    el.style.animationDuration = (4 + Math.random() * 4) + 's';
+    mockup.style.position = 'relative';
+    mockup.appendChild(el);
+    setTimeout(() => el.remove(), 6000);
+  }, 2000);
+}
+
+// === INIT ===
+document.addEventListener('DOMContentLoaded', () => {
+  animateCounters();
+  initReveal();
+  initMatrix();
+  spawnEmojis();
+});
 </script>
 </body>
 </html>
