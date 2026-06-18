@@ -644,7 +644,7 @@ body {
 
 <section class="hero">
   <div class="hero-badge">🤖 Бесплатный AI-бот в Telegram</div>
-  <h1>Получи <span class="glitch gradient-text" data-text="контент-план на 30 постов">контент-план на 30 постов</span> за 60 секунд</h1>
+  <h1><span class="gradient-text">Получи контент-план на 30 постов за 60 секунд</span></h1>
   <p>AI-агент проанализирует твою нишу, Tone of Voice и конкурентов — и выдаст готовый план для Telegram-канала. Без воды, без шаблонов, с реальными темами и текстами.</p>
   <a href="#get" class="cta-button pulse-ring">🤖 Запустить бота бесплатно</a>
   <div class="hero-sub">Подписка на канал + деплой бота = полный доступ</div>
@@ -652,19 +652,19 @@ body {
 
 <div class="stats-row reveal">
   <div class="stat-item">
-    <div class="stat-number"><span class="typing-counter" data-target="30" data-suffix=" постов">0 постов</span></div>
+    <div class="stat-number">30 постов</div>
     <div class="stat-label">на месяц</div>
   </div>
   <div class="stat-item">
-    <div class="stat-number"><span class="typing-counter" data-target="60" data-suffix=" сек">0 сек</span></div>
+    <div class="stat-number">60 сек</div>
     <div class="stat-label">генерация</div>
   </div>
   <div class="stat-item">
-    <div class="stat-number"><span class="typing-counter" data-target="47" data-suffix=" шт">0 шт</span></div>
+    <div class="stat-number">47 шт</div>
     <div class="stat-label">готовых промптов</div>
   </div>
   <div class="stat-item">
-    <div class="stat-number"><span class="typing-counter" data-target="100" data-suffix="%">0%</span></div>
+    <div class="stat-number">100%</div>
     <div class="stat-label">бесплатно</div>
   </div>
 </div>
@@ -848,26 +848,6 @@ function toggleFaq(el) {
   el.classList.toggle('open');
 }
 
-// === TYPING COUNTER ===
-function animateCounters() {
-  const counters = document.querySelectorAll('.typing-counter');
-  counters.forEach(counter => {
-    const target = parseInt(counter.dataset.target);
-    const suffix = counter.dataset.suffix || '';
-    const duration = 2000;
-    const start = performance.now();
-    function update(now) {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(target * eased);
-      counter.textContent = current + suffix;
-      if (progress < 1) requestAnimationFrame(update);
-    }
-    requestAnimationFrame(update);
-  });
-}
-
 // === SCROLL REVEAL ===
 function initReveal() {
   const observer = new IntersectionObserver((entries) => {
@@ -914,7 +894,6 @@ function initMatrix() {
 
 // === INIT ===
 document.addEventListener('DOMContentLoaded', () => {
-  animateCounters();
   initReveal();
   initMatrix();
 });
