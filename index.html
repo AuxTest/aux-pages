@@ -195,10 +195,15 @@ body {
 .stats-row {
   display: flex;
   justify-content: center;
-  gap: 32px;
+  align-items: flex-start;
+  gap: 24px;
   margin: 40px auto;
-  max-width: 700px;
-  flex-wrap: wrap;
+  max-width: 800px;
+  flex-wrap: nowrap;
+}
+@media (max-width: 640px) {
+  .stats-row { flex-wrap: wrap; gap: 16px; }
+  .stat-number { font-size: 28px; }
 }
 .stat-item {
   text-align: center;
@@ -660,7 +665,7 @@ body {
   <div class="hero-sub">Подписка на канал + деплой бота = полный доступ</div>
 </section>
 
-<div class="stats-row reveal">
+<div class="stats-row">
   <div class="stat-item">
     <div class="stat-number">30 постов</div>
     <div class="stat-label">на месяц</div>
