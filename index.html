@@ -1,21 +1,266 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI-SMM-Бот — скоро</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Контент-план @papaleshapro — месяц (drag'n'drop)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.1.0/dist/tabler-icons.min.css">
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{background:#0f0f0f;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif;color:#888;gap:20px}
-  .emoji{font-size:64px;line-height:1;animation:pulse 2s ease-in-out infinite}
-  .title{font-size:18px;font-weight:600;color:#22c55e;letter-spacing:.05em}
-  .subtitle{font-size:13px;color:#555;max-width:320px;text-align:center;line-height:1.5}
-  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+:root{--bg:#faf9f6;--card:#ffffff;--sec:#f1efe9;--bd:#e6e3da;--bd2:#d6d2c6;--tx:#23211c;--tx2:#6b6759;--tx3:#9a9588;--info-b:#e6f1fb;--info-t:#185fa5;--info-bd:#9cc3e6}
+[data-theme="dark"]{--bg:#0b0b14;--card:#161620;--sec:#1e1e2e;--bd:#2a2a3e;--bd2:#353550;--tx:#e0e0ee;--tx2:#9898b0;--tx3:#6a6a88;--info-b:#1a2a45;--info-t:#7ab8f5;--info-bd:#2a4570}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;transition:background .3s,color .3s}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 18px 60px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+h1{font-size:22px;font-weight:600;margin:0}
+.theme-btn{width:36px;height:36px;border:1px solid var(--bd2);border-radius:10px;background:transparent;cursor:pointer;color:var(--tx2);font-size:18px;margin-left:12px;flex-shrink:0}
+.theme-btn:hover{background:var(--sec);color:var(--tx)}
+.lead{color:var(--tx2);font-size:14px;margin:8px 0 20px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px}
+.stat{background:var(--sec);border-radius:12px;padding:14px 16px;transition:background .3s}
+.stat .l{font-size:12px;color:var(--tx2)}
+.stat .v{font-size:24px;font-weight:600;margin-top:4px}
+.note{display:flex;gap:8px;background:var(--sec);border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:13px;color:var(--tx2)}
+.lbl{font-size:13px;color:var(--tx2);margin:14px 0 8px}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:10px;font-size:13px;cursor:pointer;color:var(--tx);border:1px solid var(--bd);background:transparent}
+.pill.on{border-color:var(--tx3);background:var(--card);font-weight:600}
+/* ===== Drag & Drop ===== */
+.dragging{opacity:.35;transform:scale(.97)}
+.drag-over{background:var(--info-b)!important;border-color:var(--info-bd)!important}
+.week-block{transition:background .15s,border-color .15s;border:2px solid transparent;border-radius:16px;padding:8px 8px 12px;margin-bottom:16px}
+.week-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.week{font-size:15px;color:var(--tx);font-weight:600}
+.week-count{font-size:12px;color:var(--tx3);background:var(--sec);border-radius:8px;padding:2px 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:9px;cursor:grab;transition:opacity .15s,transform .15s,box-shadow .2s}
+.card:hover{box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.card.dragging{cursor:grabbing}
+.card.hook{border:2px solid var(--info-bd)}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.day{font-size:12px;color:var(--tx3);font-weight:600}
+.title{font-size:15px;font-weight:600;line-height:1.4}
+.sub{font-size:13px;color:var(--tx2)}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:2px}
+.tags{font-size:12px;color:var(--tx3)}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 9px;border-radius:9px}
+.fx{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--tx3)}
+.copy{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid var(--bd2);border-radius:9px;background:transparent;font-size:12px;cursor:pointer;color:var(--tx)}
+.copy:hover{background:var(--bd2)}
+.drag-hint{font-size:11px;color:var(--tx3);margin-left:auto;opacity:.6}
+.save-indicator{position:fixed;bottom:20px;right:20px;background:var(--info-b);color:var(--info-t);border:1px solid var(--info-bd);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999}
+.save-indicator.show{opacity:1}
+footer{margin-top:30px;font-size:12px;color:var(--tx3)}
 </style>
 </head>
 <body>
-  <div class="emoji">⚡</div>
-  <div class="title">AI-SMM-Бот</div>
-  <div class="subtitle">Скоро запуск. Подпишись на канал, чтобы первым попробовать.</div>
+<div class="wrap">
+<div class="topbar">
+  <h1>Контент-план @papaleshapro — месяц</h1>
+  <button id="themeToggle" class="theme-btn" title="Сменить тему"><i class="ti ti-moon"></i></button>
+</div>
+<p class="lead">Перетаскивай карточки между неделями. Фильтры, статусы и промпты — на месте. Изменения сохраняются в localStorage.</p>
+<div id="stats" class="stats"></div>
+<div class="note"><i class="ti ti-color-swatch"></i><div>Будни — текст, суббота — видео-кружок, воскресенье — голос/опрос. Перетащить карточку → день/неделя пересчитаются автоматически.</div></div>
+<div class="lbl">Фильтр по рубрике</div>
+<div id="filters" class="row"></div>
+<div class="lbl">Фильтр по формату</div>
+<div id="formatfilters" class="row" style="margin-bottom:18px"></div>
+<div id="board"></div>
+<footer>papaleshapro-tg-posts · drag'n'drop версия · перетаскивай карточки между неделями · автосохранение в localStorage</footer>
+</div>
+<div id="saveIndicator" class="save-indicator"><i class="ti ti-check"></i> Сохранено</div>
+<script>
+var STORAGE_THEME='channel_plan_theme';
+var STORAGE_PLAN='channel_plan_data_v2';
+function loadTheme(){var t=localStorage.getItem(STORAGE_THEME);return(t==='dark'||t==='light')?t:'light'}
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);document.getElementById('themeToggle').innerHTML=t==='dark'?'<i class="ti ti-sun"></i>':'<i class="ti ti-moon"></i>'}
+function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme')||'light';var next=cur==='dark'?'light':'dark';applyTheme(next);localStorage.setItem(STORAGE_THEME,next)}
+applyTheme(loadTheme());
+document.getElementById('themeToggle').onclick=toggleTheme;
+
+var CAT={auto:{l:'Автоматизация / AI',f:'#EEEDFE',t:'#26215C',i:'ti-robot'},mkt:{l:'Маркетинг',f:'#E6F1FB',t:'#042C53',i:'ti-chart-arrows-vertical'},sales:{l:'Продажи',f:'#E1F5EE',t:'#04342C',i:'ti-coins'},land:{l:'Лендинги',f:'#FAECE7',t:'#4A1B0C',i:'ti-layout-board'},motiv:{l:'Мотивация',f:'#FAEEDA',t:'#412402',i:'ti-flame'},fun:{l:'Юмор',f:'#FBEAF0',t:'#4B1528',i:'ti-mood-smile'},ads:{l:'Реклама',f:'#F1EFE8',t:'#2C2C2A',i:'ti-speakerphone'},ask:{l:'Вовлечение',f:'#EAF3DE',t:'#173404',i:'ti-message-circle-question'}};
+var FMT={text:{l:'Текст',i:'ti-align-left',f:null,t:null},krug:{l:'Видео-кружок',i:'ti-circle-dot',f:'#FBEAF0',t:'#4B1528'},pod:{l:'Голосовой подкаст',i:'ti-microphone',f:'#E6F1FB',t:'#042C53'}};
+var FUNC={attract:'Привлечение',warm:'Прогрев',convert:'Конвертация',engage:'Вовлечение'};
+var ST={published:{l:'Опубликован',c:'#173404',b:'#EAF3DE',i:'ti-check'},ready:{l:'Черновик готов',c:'#412402',b:'#FAEEDA',i:'ti-pencil'}};
+var WD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+
+var DEFAULT_PLAN=[
+['auto','text','attract',1,'published','Вызов читателю','Внедрили AI, а легче не стало? Проблема не в нейросетях','Манифест: AI умножает то, что уже есть, а не чинит хаос','#автоматизация'],
+['sales','text','attract',1,'ready','Сцена + время + цифра','Клиент написал в 23:40. Утром он уже купил у других','Скорость ответа решает сделку — кейс до/после','#кейс #продажи'],
+['auto','text','attract',1,'ready','Контраст / сравнение','Подрядчик сказал — три недели. Ии-ассистент сделал за вечер','Claude Code закрывает список «надо бы автоматизировать»','#инструмент #ai'],
+['land','text','warm',0,'ready','Цифра-разоблачение','У вас 4 секунды. Дальше человек закрывает ваш лендинг','Ошибки первого экрана, скорость и мобильная адаптация','#практика #лендинг'],
+['sales','text','warm',0,0,'Парадокс','«Я подумаю» — это не возражение. Это 7 ваших фраз до него','Нумерованный список + крючок','#продажи'],
+['fun','krug','attract',0,0,'Спор с трендом','«Мы внедрили AI». Перевожу: поставили чат-бота на сайт','Юморной кружок про хайп','#мнение'],
+['ask','pod','engage',0,0,'Вопрос','Что вас разоряет тише: рутина или вечный поиск клиентов?','Голосовой мини-подкаст + опрос','#вопрос'],
+['mkt','text','attract',0,0,'Вызов читателю','Ваш оффер закрывают на второй строке. Вот первая, которую дочитывают','Антипример и правильный вариант','#практика #маркетинг'],
+['auto','text','attract',0,0,'Сцена + цифра','Пока вы спите, ии-агент разбирает заявки и раздаёт задачи команде','Связка под малый бизнес, без кода','#лайфхак #автоматизация'],
+['land','text','convert',0,0,'Цифра-разоблачение','Поменяли один экран — заявок стало втрое больше','Кейс 1,8% → 6,4%: что именно сделали','#кейс #лендинг'],
+['auto','pod','attract',0,0,'Спор с трендом','Большинство ии-агентов бросают задачу на полпути. Hermes — нет','Голосовой разбор: где полезен, где нет','#инструмент #ai'],
+['motiv','krug','warm',0,0,'Признание автора','Эта ошибка стоила мне полгода. Рассказываю, чтобы вы не повторили','Личный кружок с осознанным уроком','#история'],
+['sales','text','warm',0,0,'Парадокс','Грань между «дожать» и «передавить» — всего одна фраза','Антипример и правильный вариант','#практика #продажи'],
+['mkt','text','engage',0,0,'Вызов читателю','Назовите цифру, на которую смотрите первой утром. Скажу, что она прячет','Лёгкий пост + опрос, разбор ответов','#вопрос #маркетинг'],
+['auto','text','attract',0,0,'Вызов читателю','Автоматизировать на 20% умеют все. А если в десять раз?','Техника уровней усиления: 5 ступеней','#автоматизация'],
+['mkt','text','convert',0,0,'Парадокс','Поток заявок без рекламного бюджета. Да, так бывает','Кейс по контент-маркетингу с цифрами','#кейс #маркетинг'],
+['motiv','text','warm',0,0,'Парадокс','Половину проблем в бизнесе можно просто отпустить. Серьёзно','Стоический принцип через бизнес-линзу','#принцип #мысль'],
+['auto','text','attract',0,0,'Вызов читателю','Один ии-агент не вывозит? Значит, нужна команда из агентов','OpenClow: кому подходит оркестровка, кому рано','#инструмент #ai'],
+['land','pod','warm',0,0,'Сцена + цифра','Продающий лендинг за час. Голосом провожу по каждому блоку','Подкаст-гайд: собираем с помощью AI','#лайфхак #лендинг'],
+['ads','text','attract',0,0,'Спор с трендом','Через год вашу рекламу будет вести ии-агент. Готовиться надо сейчас','Единственный пост про рекламу — взгляд вперёд','#мнение'],
+['sales','krug','engage',0,0,'Вызов читателю','Покажу, почему ваше первое сообщение клиенту убивает сделку','Кружок-разбор + сбор скриптов подписчиков','#вопрос #продажи'],
+['sales','text','warm',0,0,'Парадокс','Скрипт продаж вам не нужен. Нужны три вопроса','Упрощение процесса продаж + примеры','#продажи'],
+['motiv','text','warm',0,0,'Метафора','Масштабировать хаос — как лить воду в дырявое ведро быстрее','Афоризм-молния','#мысль'],
+['auto','text','convert',0,0,'Цифра-разоблачение','Один ии-агент вернул команде 20 часов в неделю — это полставки','Кейс с цифры + приглашение на разбор','#кейс #автоматизация'],
+['auto','text','warm',0,0,'Спор с трендом','Claude Code, Hermes и OpenClow в одной связке. Почти никто так не делает','Клиффхэнгер-двойной пост','#ai'],
+['mkt','text','attract',0,0,'Цифра-разоблачение','Эти метрики красиво растут в отчёте и врут вам в лицо','Нумерованный список + крючок','#маркетинг'],
+['fun','krug','attract',0,0,'Спор с трендом','Бинго предпринимателя: что говорят со сцены на форумах по цифровизации','Юморной кружок','#мнение'],
+['land','pod','engage',0,0,'Вызов читателю','Пришлите свой лендинг. Разберу слабые места голосом, без цензуры','Голосовой подкаст + сбор заявок','#вопрос #лендинг'],
+['motiv','text','warm',0,0,'Признание автора','Тащите бизнес на себе и выгораете? Без лозунгов — по делу','Честное обращение к сегменту','#история'],
+['auto','text','convert',0,0,'Вызов читателю','С чего начать автоматизацию, чтобы она окупилась, а не легла на полку','Сводка месяца + призыв написать @alexmitprofit','#автоматизация']
+];
+
+// --- Загрузка/инициализация плана ---
+var PLAN=[];
+function initPlan(){
+  var saved=localStorage.getItem(STORAGE_PLAN);
+  if(saved){
+    try{PLAN=JSON.parse(saved);return}catch(e){}
+  }
+  PLAN=DEFAULT_PLAN.map(function(r,i){return{d:i+1,wd:WD[i%7],w:Math.floor(i/7)+1,cat:r[0],fmt:r[1],fn:r[2],hook:r[3],st:r[4]||0,fx:r[5],title:r[6],sub:r[7],tags:r[8]};});
+}
+function savePlan(){
+  localStorage.setItem(STORAGE_PLAN,JSON.stringify(PLAN));
+  var el=document.getElementById('saveIndicator');
+  el.classList.add('show');
+  setTimeout(function(){el.classList.remove('show')},1200);
+}
+function resetPlan(){
+  localStorage.removeItem(STORAGE_PLAN);
+  initPlan();
+  renderAll();
+}
+
+// --- Фильтры ---
+var activeCat='all',activeFmt='all';
+function pill(id,label,icon,active,kind){return '<button data-'+kind+'="'+id+'" class="pill'+(active?' on':'')+'"><i class="ti '+icon+'"></i>'+label+'</button>';}
+
+// --- Prompt ---
+function promptFor(p){
+  var fm=FMT[p.fmt];
+  return 'Напиши полный пост для Telegram-канала @papaleshapro с заголовком: "'+p.title+'". Формула: '+p.fx+'. Формула: '+p.fx+'. Формат: '+fm.l+'. Хэштеги: '+p.tags+'. Функция: '+FUNC[p.fn]+'. Ракурс: '+p.sub+'. '+(p.hook?'Пост-вход, первая строка останавливает прокрутку. ':'')+(p.fmt==='krug'?'Сценарий кружка: одна мысль, разговорно, 20-60 сек, без списков. ':'')+(p.fmt==='pod'?'Сценарий подкаста: 1-3 мин, разговорно, вопрос в конце. ':'')+'Соблюдай скил papaleshapro-tg-posts: средняя длина, без эмодзи в заголовке, дружеский тон, ии-агент/ии-ассистент, Claude Code = ии-ассистент, автор-эксперт, цитата для ключевой мысли, конкретные числа, короткий CTA. Прогони через anti-ai-writing-guide.';
+}
+
+// --- Карточка ---
+function cardHTML(p,globalIdx){
+  var c=CAT[p.cat],fm=FMT[p.fmt];
+  var fb=fm.f?'<span class="badge" style="background:'+fm.f+';color:'+fm.t+';font-weight:600"><i class="ti '+fm.i+'"></i>'+fm.l+'</span>':'<span class="fx"><i class="ti '+fm.i+'"></i>'+fm.l+'</span>';
+  var hb=p.hook?'<span class="badge" style="background:var(--info-b);color:var(--info-t)"><i class="ti ti-login-2"></i>Вход</span>':'';
+  var sb=p.st?'<span class="badge" style="background:'+ST[p.st].b+';color:'+ST[p.st].c+'"><i class="ti '+ST[p.st].i+'"></i>'+ST[p.st].l+'</span>':'';
+  var bl=p.fmt!=='text'?'border-left:3px solid '+fm.t+';':'';
+  return '<div class="card'+(p.hook?' hook':'')+'" style="'+bl+(p.st==='published'?'opacity:.74;':'')+'" draggable="true" data-idx="'+globalIdx+'">'+
+    '<div class="meta"><span class="day">День '+p.d+' · '+p.wd+'</span>'+sb+hb+fb+'</div>'+
+    '<div class="title">'+p.title+'</div>'+
+    '<div class="meta"><span class="badge" style="background:'+c.f+';color:'+c.t+'"><i class="ti '+c.i+'"></i>'+c.l+'</span><span class="fx"><i class="ti ti-bolt"></i>'+p.fx+'</span></div>'+
+    '<div class="sub">'+p.sub+'</div>'+
+    '<div class="foot"><span class="tags">'+p.tags+' · '+FUNC[p.fn]+'</span><button class="copy" data-idx="'+globalIdx+'"><i class="ti ti-copy"></i>Промпт</button></div></div>';
+}
+
+// --- Рендер ---
+function renderAll(){
+  // Фильтры
+  var f=pill('all','Все рубрики','ti-layout-grid',activeCat==='all','cat');
+  for(var k in CAT)f+=pill(k,CAT[k].l,CAT[k].i,activeCat===k,'cat');
+  document.getElementById('filters').innerHTML=f;
+  var ff=pill('all','Все форматы','ti-stack-2',activeFmt==='all','fmt');
+  for(var k2 in FMT)ff+=pill(k2,FMT[k2].l,FMT[k2].i,activeFmt===k2,'fmt');
+  document.getElementById('formatfilters').innerHTML=ff;
+  document.querySelectorAll('[data-cat]').forEach(function(b){b.onclick=function(){activeCat=b.dataset.cat;renderAll();};});
+  document.querySelectorAll('[data-fmt]').forEach(function(b){b.onclick=function(){activeFmt=b.dataset.fmt;renderAll();};});
+
+  // Статистика
+  var pub=PLAN.filter(function(p){return p.st==='published';}).length;
+  var ready=PLAN.filter(function(p){return p.st==='ready';}).length;
+  var krug=PLAN.filter(function(p){return p.fmt==='krug';}).length;
+  var pod=PLAN.filter(function(p){return p.fmt==='pod';}).length;
+  var cards=[['Всего',PLAN.length,0],['Опубликовано',pub,0],['Готово',ready,0],['Видео-кружков',krug,'#FBEAF0'],['Голос. подкастов',pod,'#E6F1FB']];
+  document.getElementById('stats').innerHTML=cards.map(function(c){return '<div class="stat" style="'+(c[2]?'background:'+c[2]:'')+'"><div class="l">'+c[0]+'</div><div class="v">'+c[1]+'</div></div>';}).join('');
+
+  // Недели
+  var weeks=[1,2,3,4,5],html='';
+  weeks.forEach(function(w){
+    var posts=PLAN.filter(function(p){return p.w===w&&(activeCat==='all'||p.cat===activeCat)&&(activeFmt==='all'||p.fmt===activeFmt);});
+    if(!posts.length)return;
+    html+='<div class="week-block" data-week="'+w+'">'+
+      '<div class="week-header"><span class="week">'+(w===1?'Неделя 1 — вход для новичка':'Неделя '+w)+'</span><span class="week-count">'+posts.length+' постов</span><span class="drag-hint"><i class="ti ti-grip-horizontal"></i> перетащи карточку сюда</span></div>'+
+      '<div class="grid">'+posts.map(function(p){return cardHTML(p,PLAN.indexOf(p));}).join('')+'</div></div>';
+  });
+  document.getElementById('board').innerHTML=html;
+
+  // Кнопки промптов
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.onclick=function(e){
+      e.stopPropagation();
+      var idx=parseInt(btn.dataset.idx,10);
+      var p=PLAN[idx];
+      navigator.clipboard.writeText(promptFor(p)).then(function(){
+        var o=btn.innerHTML;btn.innerHTML='<i class="ti ti-check"></i>Скопировано';setTimeout(function(){btn.innerHTML=o;},1500);
+      });
+    };
+  });
+
+  // ===== Drag & Drop =====
+  var draggedIdx=null;
+
+  document.querySelectorAll('.card').forEach(function(card){
+    card.addEventListener('dragstart',function(e){
+      draggedIdx=parseInt(card.dataset.idx,10);
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed='move';
+      e.dataTransfer.setData('text/plain',draggedIdx);
+    });
+    card.addEventListener('dragend',function(){
+      card.classList.remove('dragging');
+      document.querySelectorAll('.week-block').forEach(function(wb){wb.classList.remove('drag-over');});
+      draggedIdx=null;
+    });
+  });
+
+  document.querySelectorAll('.week-block').forEach(function(wb){
+    wb.addEventListener('dragover',function(e){
+      e.preventDefault();
+      e.dataTransfer.dropEffect='move';
+      wb.classList.add('drag-over');
+    });
+    wb.addEventListener('dragleave',function(e){
+      if(!wb.contains(e.relatedTarget))wb.classList.remove('drag-over');
+    });
+    wb.addEventListener('drop',function(e){
+      e.preventDefault();
+      wb.classList.remove('drag-over');
+      if(draggedIdx===null)return;
+      var targetWeek=parseInt(wb.dataset.week,10);
+      var p=PLAN[draggedIdx];
+      if(p.w===targetWeek)return;
+      // Пересчитываем день: находим последний день в целевой неделе
+      var weekPosts=PLAN.filter(function(x){return x.w===targetWeek;});
+      var maxDay=weekPosts.length>0?Math.max.apply(null,weekPosts.map(function(x){return x.d;})):0;
+      var newD=maxDay+1;
+      // Сдвигаем дни в старой неделе
+      var oldWeek=p.w;
+      PLAN.forEach(function(x){if(x.w===oldWeek&&x.d>p.d){x.d--;x.wd=WD[(x.d-1)%7];}});
+      // Обновляем пост
+      p.w=targetWeek;
+      p.d=newD;
+      p.wd=WD[(newD-1)%7];
+      // Пересчитываем дни в новой неделе
+      PLAN.forEach(function(x){if(x.w===targetWeek){x.wd=WD[(x.d-1)%7];}});
+      savePlan();
+      renderAll();
+    });
+  });
+}
+
+initPlan();
+renderAll();
+</script>
 </body>
 </html>
